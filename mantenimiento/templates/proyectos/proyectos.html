@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+{% block title %}Sistema de Gestión Administrativa{% endblock %}
+{% block content %}
+<div class="container" style="max-width:100%;">
+	<br>
+	<div class="row">
+		<div class="col-sm-8 text-left">Mantenimiento <i class="fa fa-chevron-right"></i> Proyectos</div>
+		<div class="col-sm-1 offset-2 text-center">
+			<div class="col" onclick="modalExportarProyecto()">
+				<a href="#" class="link-button">
+					<i class="fa fa-file-excel-o" style="margin-left:32px;"></i>
+					<div class="col">Exportar</div>
+				</a>
+			</div>
+		</div>
+		<div class="col-sm-1 text-center">
+			<div class="col">			
+				<a href="{% url 'nuevo_mant' %}" class="link-button">
+					<i class="fa fa-file-o" style="margin-left:17px;"></i>
+					<div class="col text-center">Nuevo</div>
+				</a>
+			</div>
+		</div>
+	</div>
+	<br>
+	<div class="row">
+		<div class="col-xs-4 text-left" style="margin-left:17px;">Buscar por:</div>
+		<div class="col-sm-9 text-rigth" >
+            <input class="form-control" type="text" placeholder="" id="buscar" name="buscar">
+        </div>
+		<div class="col-sm-1 text-right"  style="margin-left:10px;">
+			<button type="submit" class="btn btn-default" onclick="recorrerProyectos(1)">Buscar</button>
+		</div>
+		<div class="col-sm-1 text-right">
+			<button type="submit" class="btn btn-default" onclick="recorrerProyectos(2)">Limpiar</button>
+		</div>
+	</div>
+	<br>
+</div>
+<table class="table table-striped" id="data_proyectos">
+    <thead>
+      	<tr>
+	        <th>Tipo Doc</th>
+	        <th>Num. Doc</th>
+	        <th>Razon Social</th>
+	        <th>Nombre del Proyecto</th>
+	        <th>Fec. Aprobación</th>
+	        <th>Fec. Inicio</th>
+	        <th>Fec. Cierre</th>
+	        <th>Estado</th>
+	        <th>Opciones</th>
+      	</tr>
+    </thead>
+    <tbody  id="tabla_proyectos">
+    	{% include "proyectos/tabla_proyectos.html" %}
+    </tbody>
+</table>
+<br><br>
+<input  type="hidden" value="" id="idProyecto">
+<input  type="hidden" value="" id="idEstadoProyecto">
+{% endblock %}

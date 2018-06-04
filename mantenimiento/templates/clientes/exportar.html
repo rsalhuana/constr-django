@@ -1,0 +1,28 @@
+<table class="table table-striped">
+        <thead>
+              <tr>
+                <th>Tipo Doc</th>
+                <th>Num. Doc</th>
+                <th>Ape. y Nom. / Razon Social</th>
+                <th>Direccion</th>
+                <th>Estado</th>
+              </tr>
+        </thead>
+        <tbody  id="tabla_clientes">
+            {% if clientes %}
+                {%for cliente in clientes%}
+                    <tr>
+                        <td>{{cliente.vc_codTipoDocumento.vc_codigo}}</td>
+                        <td>{{cliente.vc_numDocumento}}</td>
+                        <td>{{cliente.vc_razonSocial}}</td>
+                        <td>{{cliente.vc_direccion}}</td>
+                        <td>{{cliente.vc_codEstado.vc_valor1}}</td>
+                    </tr>	
+                {% endfor %} 
+                {% else %}
+                <tr>
+                    <td colspan="8" class="text-center">No se encontraron registros</td>
+                </tr> 
+            {% endif %}
+        </tbody>
+    </table>

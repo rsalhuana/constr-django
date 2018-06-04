@@ -1,0 +1,67 @@
+<div class="modal fade" id="activar_colaborador">
+    <div class="modal-dialog">
+            <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Información</h4>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-body">¿Está seguro que desea activar el colaborador?</div>
+            <div class="modal-footer">
+                <a class="btn btn-primary"  href="" id="id_activar_colaborador">Aceptar</a>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+            </div>  
+            </div>
+    </div>
+    </div>
+    <div class="modal fade" id="desactivar_colaborador">
+    <div class="modal-dialog">
+            <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Información</h4>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-body">¿Está seguro de dar de Baja el registro?</div>
+            <div class="modal-footer">
+                <a class="btn btn-primary"  href="" onclick="cerrarModal();" id="id_desactivar_colaborador">Aceptar</a>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+            </div>  
+            </div>
+    </div>
+    </div>
+    {% if colaboradores %}
+        {%for colaborador in colaboradores%}
+            <tr id="tr_{{forloop.counter}}" class="tr_colaboradores">
+                <td>{{colaborador.vc_codtipodocumento.vc_codigo}}</td>
+                <td>{{colaborador.vc_numdocumento}}</td>              
+                <td>{{colaborador.vc_apePatColaborador}} {{colaborador.vc_nomColaborador}}</td>
+                <td>{{colaborador.vc_telfcolaborador}}</td>
+                <td>{{colaborador.vc_codsituacion.vc_valor1}}</td>
+                <td>{{colaborador.vc_codestado.vc_valor1}}</td>
+                <td>
+                    <div class='row margin-button' id="{{colaborador.vc_codestado.id_generalDetalle}}" >
+                       {% if colaborador.vc_codestado.id_generalDetalle ==  1 %}
+                       <div class='cursor'>
+                           <a href="{% url 'editar_colaborador' colaborador.id_colaborador 1 %}" class="link-button"><i class='fa fa-pencil-square-o'></i></a>
+                       </div>
+                       {% endif %}
+                       
+                        <div class='cursor margin-button' onclick="modalStatusColaborador({{colaborador.id_colaborador}} , {{colaborador.vc_codestado.id_generalDetalle }});">
+                            {% if colaborador.vc_codestado.id_generalDetalle == 1 %}
+                                <i class='fa fa-times'></i>
+                            {% else %}
+                                <i class='fa fa-check'></i>
+                            {% endif %}
+                        </div>
+    
+                       <div class='cursor margin-button'>
+                           <a href="{% url 'editar_colaborador' colaborador.id_colaborador 0 %}" class="link-button"><i class='fa fa-eye'></i></a>
+                       </div>
+                   </div>
+               </td>
+            </tr>	
+        {% endfor %} 
+        {% else %}
+        <tr>
+            <td colspan="9" class="text-center" id="no_registro">No se encontraron registros</td>
+        </tr> 
+    {% endif %}

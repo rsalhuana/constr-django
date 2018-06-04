@@ -1,0 +1,363 @@
+{% extends "base.html" %}
+{% block title %}Sistema de Gestión Administrativa{% endblock %}
+{% block content %}
+
+<div class="container" style="max-width:100%;">
+  <br>
+  <form action="/guardar" method="POST"  id="form-save-ingreso">{% csrf_token %}
+  	<div class="row">
+  		<div class="col-sm-8 text-left">Almacen 
+        <i class="fa fa-chevron-right"></i> Ingresos 
+        <i class="fa fa-chevron-right"></i> Nuevo
+      </div>
+      <div class="col object-tool">
+        <div class="row offset-1">
+          <div class="col-sm-2 offset-5 text-right">
+            <div class="col">
+              <a class="link-button btn link-submit cursor" href='#' data-form='form-save-ingreso' data-formmain="ingresos">
+                <i class="fa fa-save"></i>
+                <div class="col"> Grabar</div>
+              </a>
+            </div>
+          </div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+          <div class="col-sm-2 text-right">
+            <div class="col">
+              <a class="link-button btn" href='{% url 'ingresos' %}'>
+                <i class="fa fa-reply"></i>
+                <div class="col"> Regresar</div>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+  	</div>
+	  <br>
+	  <ul class="nav nav-tabs">
+      <li class="nav-item">
+        <a class="nav-link active color-letter" data-toggle="tab" href="#generales">Generales</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link color-letter" data-toggle="tab" href="#comprobante">Comprobante</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link color-letter" data-toggle="tab" href="#detalle">Detalle</a>
+      </li>
+    </ul>
+    <!-- Tab panes -->
+    <div class="tab-content">
+      <br>
+      <!-- #################GENERAL################################ -->
+      <div class="tab-pane active container" id="generales" style="max-width:100%;">
+        <div class="form-group" onclick="selectOrden()">
+          <div class="row">
+            <div class="col-sm-2"></div>
+            <div class="col-sm-2">
+              <label class="radio-inline">
+                <input type="radio" name="optradio" checked="checked" id="s_orden"  name="s_orden"> Sin Orden Compra
+              </label>
+            </div>
+            <div class="col-sm-2">
+              <label class="radio-inline">
+                <input type="radio" name="optradio" id="c_orden"  name="c_orden"> Con Orden Compra
+              </label>
+            </div>
+          </div>
+        </div>
+        <div class="form-group">
+          <div class="row">
+            <div class="col-sm-2 text-left"><label for="num_orden">Num. Ord. Compra</label></div>
+            <div class="col-sm-2 text-left"><input class="form-control" type="text" placeholder="" id="num_orden" name="num_orden" readonly maxlength="10">
+            </div>
+          </div>
+        </div>
+        <div class="form-group ingresos">
+          <div class="row">
+            <div class="col-sm-2 text-left"><label for="recepcion">Recepción</label></div>
+            <div class="col-sm-3 text-left">
+              <select class="form-control remove-selected"  name="recepcion" id="recepcion" required>
+                <option selected value="">Seleccionar</option>
+                {% for recep in recepcion %}
+                  <option value="{{ recep.id_generalDetalle}}">{{ recep.vc_valor1 }}</option>
+                {% endfor %}                        
+              </select> <div class="invalid__recepcion text-invalid">
+      
+        </div>
+            </div>
+          </div>
+        </div>
+        <div class="form-group ingresos">
+          <div class="row">
+            <div class="col-sm-2 text-left"><label for="proyecto">Proyecto</label></div>
+            <div class="col-sm-6 text-left">
+              <select class="form-control remove-selected"  name="proyecto" id="proyecto" required>
+                <option selected value="">Seleccionar</option>
+                {% for proyecto in proyectos %}
+                  <option value="{{ proyecto.id_proyecto}}">{{ proyecto.vc_nombreProyecto }}</option>
+                {% endfor %}
+              </select>
+              <div class="invalid__proyecto text-invalid"></div>
+            </div>
+          </div>
+        </div>
+        <div class="form-group">
+          <div class="row">
+            <div class="col-sm-2 text-left">Estado</div>
+            <div class="col-sm-3 text-left">
+              <select class="form-control" readonly  name="estado">
+                <option value="8">Registrado</option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- #################COMPROBNANTE################################ -->
+      <div class="tab-pane container" id="comprobante" style="max-width:100%;">
+        <div class="form-group ingresos">
+          <div class="row" class="datepicker" data-date-format="mm/dd/yyyy">
+            <div class="col-sm-2 text-left"><label for="fecha_emision">Fecha Emisión</label></div>
+            <div class="col-sm-2 text-left">
+              <div class="input-group">
+                <input class="form-control py-2 border-right-0 border remove-selected block-datep" data-date-format="mm/dd/yyyy" type="text" value="{{fecha}}" id="fecha_emision"  name="fecha_emision"  readonly>
+                <span class="input-group-append">
+                    <div class="input-group-text d-flex align-items-center h100"><i class="fa fa-calendar"></i></div>
+                </span>
+              </div>
+               <div class="invalid__fecha_emision text-invalid"></div>
+            </div>
+          </div>
+        </div>
+        <div class="form-group ingresos">
+          <div class="row">
+            <div class="col-sm-2 text-left"><label for="ruc">RUC Proveedor</label></div>
+            <div class="col-sm-2 text-left">
+                <input class="form-control remove-selected" type="tetx" value="" id="ruc"  name="ruc" required>
+                <div class="invalid__ruc text-invalid"></div>
+            </div>
+            <div class="col-sm-2 text-left cursor" onclick="buscarRuc();">
+                <i class="fa fa-search"></i>
+            </div>
+          </div>
+        </div>
+        <div class="form-group">
+          <div class="row">
+            <div class="col-sm-2 text-left">Raz. Soc. Proveedor</div>
+            <div class="col-sm-5 text-left">
+              <input class="form-control" type="text" placeholder="" readonly id="razon_social"  name="razon_social">
+            </div>
+          </div>
+        </div>
+        <div class="form-group ingresos">
+          <div class="row">
+            <div class="col-sm-2 text-left"><label for="tipo_comprobante">Tipo Comprobante</label></div>
+            <div class="col-sm-3 text-left">
+              <select class="form-control remove-selected"  name="tipo_comprobante"  id="tipo_comprobante" required>
+                <option selected value="">Seleccionar</option>
+                {% for tipoc in tipocomprobante %}
+                  <option value="{{ tipoc.id_generalDetalle}}">{{ tipoc.vc_valor1 }}</option>
+                {% endfor %}    
+              </select>
+              <div class="invalid__tipo_comprobante text-invalid"></div>
+            </div>
+          </div>
+        </div>
+        <div class="form-group ingresos">
+          <div class="row">
+            <div class="col-sm-2 text-left"><label for="serie">Serie Comprobante</label></div>
+            <div class="col-sm-2 text-left">
+              <input class="form-control remove-selected" type="text" placeholder=""  name="serie" id="serie" required maxlength="3">
+              <div class="invalid__serie text-invalid"></div>
+            </div>
+          </div>
+        </div>
+        <div class="form-group ingresos">
+          <div class="row">
+            <div class="col-sm-2 text-left"><label for="num_comprobante">Num. Comprobante</label></div>
+            <div class="col-sm-2 text-left">
+              <input class="form-control remove-selected" type="text" placeholder=""  name="num_comprobante" id="num_comprobante" required maxlength="5">
+              <div class="invalid__num_comprobante text-invalid"></div>
+            </div>
+          </div>
+        </div>
+        <div class="form-group ingresos">
+          <div class="row">
+            <div class="col-sm-2 text-left"><label for="condicion">Condición Comp.</label></div>
+            <div class="col-sm-3 text-left">
+              <select class="form-control remove-selected" name="condicion" id="condicion" required>
+                <option selected value="">Seleccionar</option>
+                {% for condicion in condicionpago %}
+                  <option value="{{ condicion.id_generalDetalle}}">{{ condicion.vc_valor1 }}</option>
+                {% endfor %}   
+              </select>
+              <div class="invalid__condicion text-invalid"></div>
+            </div>
+          </div>
+        </div>
+        <div class="form-group">
+          <div class="row">
+            <div class="col-sm-2 text-left">Importe</div>
+            <div class="col-sm-2 text-left">
+              <input class="form-control text-right" type="text" placeholder="0.00" readonly id="importe_comprobante" name="importe_comprobante" value="0.00">
+            </div>
+          </div>
+        </div>
+        <div class="form-group">
+          <div class="row">
+            <div class="col-sm-2 text-left">IGV</div>
+            <div class="col-sm-2 text-left">
+              <input class="form-control text-right" type="text" placeholder="0.00" readonly id="igv_comprobante" name="igv_comprobante" value="0.00">
+            </div>
+          </div>
+        </div>
+        <div class="form-group">
+          <div class="row">
+            <div class="col-sm-2 text-left">Total</div>
+            <div class="col-sm-2 text-left">
+              <input class="form-control text-right" type="text" placeholder="0.00" readonly id="total_comprobante" name="total_comprobante" value="0.00">
+            </div>
+          </div>
+        </div>
+        <br><br>
+      </div>
+      <!-- #################DETALLE################################ -->
+      <div class="tab-pane container" id="detalle" style="max-width:100%;">
+        <div class="form-group">
+          <div class="row">
+            <div class="col-sm-2 text-left"><label for="direccion_gasto">Dirección del Gasto</label></div>
+            <div class="col-sm-3 text-left">
+              <select class="form-control remove-selected" id="direccion_gasto" name="direccion_gasto" required>
+                <option selected value="">Seleccionar</option>
+                {% for gasto in direcciongasto %}
+                  <option value="{{ gasto.id_generalDetalle}}">{{ gasto.vc_valor1 }}</option>
+                {% endfor %}   
+              </select>
+              <div class="invalid__direccion_gasto text-invalid"></div>
+          </div>
+          </div>
+        </div>
+        <div class="form-group">
+          <div class="row">
+            <div class="col-sm-2 text-left"><label for="descripcion_detalle">Descripción</label></div>
+            <div class="col-sm-6 text-left">
+              <input class="form-control autocomplete remove-selected" type="text" placeholder="" id="descripcion_detalle" name="descripcion_detalle" required>
+              <div class="invalid__descripcion_detalle text-invalid"></div>
+            </div>
+          </div>
+        </div>
+        <div class="form-group">
+          <div class="row">
+            <div class="col-sm-2 text-left">Código</div>
+            <div class="col-sm-2 text-left">
+               <input class="form-control" type="search" id="codigo_material" name="codigo_material">
+            </div>
+            <div class="col-sm-2 text-left cursor" onclick="buscarDescMaterial();">
+              <i class="fa fa-search"></i>
+            </div>
+          </div>
+        </div>
+        <div class="form-group">
+          <div class="row">
+            <div class="col-sm-2 text-left">Valor</div>
+            <div class="col-sm-1 text-left">
+              <input class="form-control" type="text" placeholder="" readonly id="valor_medida" name="valor_medida">
+            </div>
+          </div>
+        </div>
+        <div class="form-group">
+          <div class="row">
+            <div class="col-sm-2 text-left">Unidad de Medida</div>
+            <div class="col-sm-2 text-left">
+              <input class="form-control" type="text" placeholder="" readonly id="unidad_medida" name="unidad_medida">
+            </div>
+          </div>
+        </div>
+        <div class="form-group">
+          <div class="row">
+            <div class="col-sm-2 text-left"><label for="cantidad_detalle">Cantidad</label></div>
+            <div class="col-sm-2 text-left">
+              <input class="form-control text-right remove-selected" type="text" placeholder=""  id="cantidad_detalle" name="cantidad_detalle" required onkeydown="comm_replace(this);decimal(6,2,'cantidad_detalle');" maxlength="9">
+              <div class="invalid__cantidad_detalle text-invalid"></div>
+            </div>
+          </div>
+        </div>
+        <div class="form-group">
+          <div class="row">
+            <div class="col-sm-2 text-left">Total Ingreso</div>
+            <div class="col-sm-2 text-left">
+              <input class="form-control text-right" type="text" placeholder="" readonly id="total_detalle"  name="total_detalle">
+            </div>
+          </div>
+        </div>
+        <div class="form-group">
+          <div class="row">
+            <div class="col-sm-2 text-left">Precio Unitario</div>
+            <div class="col-sm-2 text-left">
+              <input class="form-control text-right" type="text" placeholder="" readonly id="precio_detalle" name="precio_detalle">
+            </div>
+          </div>
+        </div>
+        <div class="form-group">
+          <div class="row">
+            <div class="col-sm-2 text-left">Sub Total</div>
+            <div class="col-sm-2 text-left">
+              <input class="form-control text-right" type="text" placeholder="" readonly id="subtotal_detalle" name="subtotal_detalle">
+            </div>
+          </div>
+        </div>
+        <div class="form-group">
+          <div class="row">
+            <div class="col-sm-2 text-left">IGV</div>
+            <div class="col-sm-2 text-left">
+              <input class="form-control text-right" type="text" placeholder="" readonly id="igv_detalle" name="igv_detalle">
+            </div>
+          </div>
+        </div>
+        <div class="form-group">
+          <div class="row">
+            <div class="col-sm-2 text-left"><label for="importe_detalle">Importe</label></div>
+            <div class="col-sm-2 text-left">
+              <input class="form-control text-right remove-selected" type="text" placeholder="" id="importe_detalle"  name="importe_detalle" required onkeydown="comm_replace(this);decimal(6,2,'importe_detalle');" maxlength="9">
+              <div class="invalid__importe_detalle text-invalid"></div>
+            </div>
+            <div class="col-sm-2 text-left cursor" onclick="agregarDetalle();" id="botonAgregar">
+              <i class="fa fa-plus"></i>
+            </div>
+            <div class="col-sm-2 text-left cursor hide" onclick="guardarEdicion();" id="botonGuardar">
+              <i class="fa fa-check"></i>
+            </div>
+          </div>
+        </div>
+        <input type="hidden" name="id_materiales" id="id_materiales" value=''> 
+        <table class="table table-bordered">
+          <thead>
+            <tr>
+              <th scope="col">Dirección Gasto</th>
+              <th scope="col">Código</th>
+              <th scope="col">Descripción</th>
+              <th scope="col">Uni. Med</th>
+              <th scope="col">Conf. O.C.</th>
+              <th scope="col">Cantidad</th>
+              <th scope="col">Total</th>
+              <th scope="col">Precio Unit.</th>
+              <th scope="col">IGV</th>
+              <th scope="col">Importe</th>
+              <th scope="col">Conf. Adm.</th>
+              <th scope="col">Opciones</th>
+            </tr>
+          </thead>
+          <tbody id="tabla_detalle"></tbody>
+        </table>
+        <br><br>
+      </div>
+      <input type="hidden" id="contador_detalle" value="0">
+      <input type="hidden" id="idEditar">
+      <div  id="array_detalle"></div>
+      <input type="hidden" name="array" id="array" value='[]'> 
+      <input type="hidden" name="id_proveedor" id="id_proveedor" value=''> 
+    </div>
+  </form>
+</div>
+{% endblock %}
+{% load staticfiles %}
+{% block extrajs %}
+<script src="{% static 'js/functions-almacen.js' %}?v=89"></script>
+{% endblock %}

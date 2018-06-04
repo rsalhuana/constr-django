@@ -1,0 +1,76 @@
+<div class="rowtitle container">
+    <div class="row border-bottom p-2">
+        <div class="col-12">
+            <strong>Sistema de Getión Administrativa</strong>
+        </div>
+    </div>
+</div>
+<div class="col-sm-12 text-right">
+	<strong>Bienvenido: {% firstof user.get_full_name user.get_username %} </strong>
+	<span> &nbsp;
+		 <a href="{% url 'logout' %}">Cerrar Sesión</a>
+	</span>
+</div>
+<nav class="navbar navbar-light navbar-expand-lg bg-light justify-content-center" style="background-color:#f0f2f5 !important;">
+	<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#nav-content" aria-controls="nav-content" aria-expanded="false" aria-label="Toggle navigation">
+		<span class="navbar-toggler-icon"></span>
+	</button>
+	<div class="collapse navbar-collapse" id="nav-content">   
+		<ul class="navbar-nav nav-fill w-100">
+			{% if request.user.is_superuser or perms  %}
+	            {% if perms.auth %}
+					<li class="nav-item">
+						<a class="nav-link color-letter" href="{% url 'admin:index' %}"><strong>Configuración</strong></a>
+					</li>
+				{% endif %}
+				<li class="nav-item dropdown">
+					<a class="nav-link dropdown-toggle color-letter" data-toggle="dropdown" id="Preview" href="#" role="button" aria-haspopup="true" aria-expanded="false">
+						<strong>Mantenimiento</strong>
+					</a>
+					<div class="dropdown-menu" aria-labelledby="Preview">
+						{% if perms.mantenimiento %}
+						{% if perms.mantenimiento.view_materiales %}
+						<a class="dropdown-item" href="{% url 'materiales' %}"><strong>Materiales/Herramientas</strong></a>
+						{% endif %}
+						{% endif %}
+						<a class="dropdown-item" href="{% url 'clientes' %}"><strong>Clientes</strong></a>
+						<a class="dropdown-item" href="{% url 'proyectos' %}"><strong>Proyectos</strong></a>
+						<a class="dropdown-item" href="{% url 'proveedores' %}"><strong>Proveedores</strong></a>
+						<a class="dropdown-item" href="{% url 'colaboradores' %}"><strong>Colaboradores</strong></a>
+						<!-- <a class="dropdown-item" href=""><strong>Familia</strong></a>
+						<a class="dropdown-item" href=""><strong>Clasificación Materiales</strong></a>
+						<a class="dropdown-item" href=""><strong>Tipo Merma</strong></a>
+						<a class="dropdown-item" href=""><strong>Clasificación Mermas</strong></a>
+						
+						<a class="dropdown-item" href=""><strong>Choferes</strong></a>
+						<a class="dropdown-item" href=""><strong>Generales</strong></a>
+						<a class="dropdown-item" href=""><strong>Parametros</strong></a> -->
+					</div>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link color-letter" href="#"><strong>Compras</strong></a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link color-letter" href="#"><strong>Ventas</strong></a>
+				</li>
+				<li class="nav-item dropdown">
+					<a class="nav-link dropdown-toggle color-letter" data-toggle="dropdown" id="Preview" href="#" role="button" aria-haspopup="true" aria-expanded="false">
+						<strong>Almacén</strong>
+					</a>
+					<div class="dropdown-menu" aria-labelledby="Preview">
+						<a class="dropdown-item" href="{% url 'ingresos' %}"><strong>Ingresos</strong></a>
+						<a class="dropdown-item" href="#"><strong>Salidas</strong></a>
+						<a class="dropdown-item" href="#"><strong>Devoluciones</strong></a>
+						<a class="dropdown-item" href="#"><strong>Mermas</strong></a>
+						<a class="dropdown-item" href="#"><strong>Recepción</strong></a>
+						<a class="dropdown-item" href="#"><strong>Equipos Protección</strong></a>
+						<a class="dropdown-item" href="#"><strong>Cargas Inventario</strong></a>
+					</div>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link color-letter" href="#"><strong>Reportes</strong></a>
+				</li>
+			{% endif %}
+		</ul>
+	</div>
+</nav>

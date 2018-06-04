@@ -1,0 +1,433 @@
+{% load staticfiles %}
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN">
+<html lang="en">
+	<head>
+		<meta charset='utf-8'>
+	    <title>{% block title %}{% endblock %}</title>
+	    <link rel="stylesheet" type="text/css" href="{% static "css/bootstrap.min.css" %}">
+	    <link rel="stylesheet" type="text/css" href="{% static "css/font-awesome.min.css" %}">
+		<link rel="stylesheet" type="text/css" href="{% static "css/style.css" %}?v=329">
+		
+	    <link rel="stylesheet" type="text/css" href="{% static "css/datepicker.css" %}">
+	    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0/css/bootstrap.css">
+	    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.16/css/dataTables.bootstrap4.min.css">
+	    {% block extrahead %}{% endblock %}
+	</head>
+	<body class='{% block bodyclass %}{% endblock %}'>
+		{% block header %}
+	        	{% include 'header.html' %}
+	    	{% endblock %}
+	    {% block messages %}
+        {% if messages %}
+
+
+        <div class="col-8 offset-2">
+            {% for message in messages %}
+            <br>
+            <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <span{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message|capfirst }}</span>
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+        {% endblock messages %}
+		<div class="container main" style="width:100%%;max-width:1320px;">
+			
+	    	{% block content %}{% endblock %}
+	    </div>
+	    <div class="modal fade" id="myModal">
+			<div class="modal-dialog">
+	  			<div class="modal-content">
+			        <div class="modal-header">
+			        	<h4 class="modal-title">Información</h4>
+			          	<button type="button" class="close" data-dismiss="modal">&times;</button>
+			        </div>
+			        <div class="modal-body" id="msg_noti"></div>
+			        <div class="modal-footer">
+			        	<button type="button" class="btn btn-primary" onclick="actualizarComprobante();" data-dismiss="modal">Aceptar</button>
+			        	<button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+			        </div>  
+		      	</div>
+		    </div>
+	  	</div>
+	  	 <div class="modal fade" id="modal-eliminar-proyecto">
+			<div class="modal-dialog">
+	  			<div class="modal-content">
+			        <div class="modal-header">
+			        	<h4 class="modal-title">Información</h4>
+			          	<button type="button" class="close" data-dismiss="modal">&times;</button>
+			        </div>
+			        <div class="modal-body" id="body-modal-eliminar"></div>
+			        <div class="modal-footer">
+			        	<button type="button" class="btn btn-primary" onclick="estatusProyecto();" data-dismiss="modal" id="btn_aceptar">Aceptar</button>
+			        	<button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+			        </div>  
+		      	</div>
+		    </div>
+	  	</div>
+	  	 <div class="modal fade" id="modal_notification">
+			<div class="modal-dialog">
+	  			<div class="modal-content">
+			        <div class="modal-header">
+			        	<h4 class="modal-title">Información</h4>
+			          	<button type="button" class="close" data-dismiss="modal">&times;</button>
+			        </div>
+			        <div class="modal-body" >Para anular el registro el estado debe estar en Registrado</div>
+			        <div class="modal-footer">
+			        	<button type="button" class="btn btn-primary" data-dismiss="modal">Aceptar</button>
+			        </div>  
+		      	</div>
+		    </div>
+	  	</div>
+	  	 <div class="modal fade" id="modal_agregar">
+			<div class="modal-dialog">
+	  			<div class="modal-content">
+			        <div class="modal-header">
+			        	<h4 class="modal-title">Información</h4>
+			          	<button type="button" class="close" data-dismiss="modal">&times;</button>
+			        </div>
+			        <div class="modal-body" >Debe completar el campo Razon Social para continuar</div>
+			        <div class="modal-footer">
+			        	<button type="button" class="btn btn-primary" data-dismiss="modal">Aceptar</button>
+			        </div>  
+		      	</div>
+		    </div>
+	  	</div>
+	  	 <div class="modal fade" id="modal_agregar_proyecto">
+			<div class="modal-dialog">
+	  			<div class="modal-content">
+			        <div class="modal-header">
+			        	<h4 class="modal-title">Información</h4>
+			          	<button type="button" class="close" data-dismiss="modal">&times;</button>
+			        </div>
+			        <div class="modal-body" >Debe completar el campo Cliente para continuar</div>
+			        <div class="modal-footer">
+			        	<button type="button" class="btn btn-primary" data-dismiss="modal">Aceptar</button>
+			        </div>  
+		      	</div>
+		    </div>
+	  	</div>
+	  	<div class="modal fade" id="modal_rev_devuelto">
+			<div class="modal-dialog">
+	  			<div class="modal-content">
+			        <div class="modal-header">
+			        	<h4 class="modal-title">Información</h4>
+			          	<button type="button" class="close" data-dismiss="modal">&times;</button>
+			        </div>
+			        <div class="modal-body" >Solo podrá editar el contenido cuando el estado sea Registrado o Rev. Devuelto
+			        </div>
+			        <div class="modal-footer">
+			        	<button type="button" class="btn btn-primary" data-dismiss="modal">Aceptar</button>
+			        </div>  
+		      	</div>
+		    </div>
+	  	</div>
+	  	<div class="modal fade" id="modal_terminado">
+			<div class="modal-dialog">
+	  			<div class="modal-content">
+			        <div class="modal-header">
+			        	<h4 class="modal-title">Información</h4>
+			          	<button type="button" class="close" data-dismiss="modal">&times;</button>
+			        </div>
+			        <div class="modal-body" >Solo podrá editar el contenido cuando el estado sea Registrado, Aprobado o En Proceso
+			        </div>
+			        <div class="modal-footer">
+			        	<button type="button" class="btn btn-primary" data-dismiss="modal">Aceptar</button>
+			        </div>  
+		      	</div>
+		    </div>
+	  	</div>
+	  	<div class="modal fade" id="modal_edo_registrado">
+			<div class="modal-dialog">
+	  			<div class="modal-content">
+			        <div class="modal-header">
+			        	<h4 class="modal-title">Información</h4>
+			          	<button type="button" class="close" data-dismiss="modal">&times;</button>
+			        </div>
+			        <div class="modal-body" >No es posible anular el registro porque no tiene el estado Registrado
+			        </div>
+			        <div class="modal-footer">
+			        	<button type="button" class="btn btn-primary" data-dismiss="modal">Aceptar</button>
+			        </div>  
+		      	</div>
+		    </div>
+	  	</div>
+	  	<div class="modal fade" id="modal_exportar">
+			<div class="modal-dialog">
+	  			<div class="modal-content">
+			        <div class="modal-header">
+			        	<h4 class="modal-title">Información</h4>
+			          	<button type="button" class="close" data-dismiss="modal">&times;</button>
+			        </div>
+			        <div class="modal-body">¿Está seguro que desea exportar los datos a Excel?</div>
+			        <div class="modal-footer">
+			        	<a class="btn btn-primary"  href="{% url 'exportar_ingresos'%}" onclick="cerrarModal();">Aceptar</a>
+			        	<button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+			        </div>  
+		      	</div>
+		    </div>
+	  	</div>
+	  	<div class="modal fade" id="modal_exportar-proyecto">
+			<div class="modal-dialog">
+	  			<div class="modal-content">
+			        <div class="modal-header">
+			        	<h4 class="modal-title">Información</h4>
+			          	<button type="button" class="close" data-dismiss="modal">&times;</button>
+			        </div>
+			        <div class="modal-body">¿Está seguro que desea exportar los datos a Excel?</div>
+			        <div class="modal-footer">
+			        	<a class="btn btn-primary"  href="{% url 'exportar_proyectos'%}" onclick="cerrarModalProyecto();">Aceptar</a>
+			        	<button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+			        </div>  
+		      	</div>
+		    </div>
+		  </div>
+		 
+		<div class="modal fade" id="modalInfo" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			<div class="modal-dialog" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h4 class="modal-title" id="myModalLabel">
+							<i class="fa fa-check-circle-o"></i>&nbsp; Registro actualizado con exito
+						</h4>
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="modal fade" id="modal_success">
+			<div class="modal-dialog">
+	  			<div class="modal-content">
+			        <div class="modal-header">
+			        	<h4 class="modal-title">Información</h4>
+			          	<button type="button" class="close" data-dismiss="modal">&times;</button>
+			        </div>
+			        <div class="modal-body" >Registro guardado satisfactoriamente.
+			        </div>
+			        <div class="modal-footer">
+			        	<button type="button" class="btn btn-primary" data-dismiss="modal">Aceptar</button>
+			        </div>  
+		      	</div>
+		    </div>
+	  	</div>
+	  	<div class="modal fade" id="modal_edit">
+			<div class="modal-dialog">
+	  			<div class="modal-content">
+			        <div class="modal-header">
+			        	<h4 class="modal-title">Información</h4>
+			          	<button type="button" class="close" data-dismiss="modal">&times;</button>
+			        </div>
+			        <div class="modal-body" >Registro actualizado satisfactoriamente.
+			        </div>
+			        <div class="modal-footer">
+			        	<button type="button" class="btn btn-primary" data-dismiss="modal">Aceptar</button>
+			        </div>  
+		      	</div>
+		    </div>
+	  	</div>
+	  	<div class="modal fade" id="modal_material_desc">
+			<div class="modal-dialog">
+	  			<div class="modal-content">
+			        <div class="modal-header">
+			        	<h4 class="modal-title">Información</h4>
+			          	<button type="button" class="close" data-dismiss="modal">&times;</button>
+			        </div>
+			        <div class="modal-body" >Debe seleccionar una Dirección de Gasto.
+			        </div>
+			        <div class="modal-footer">
+			        	<button type="button" class="btn btn-primary" data-dismiss="modal">Aceptar</button>
+			        </div>  
+		      	</div>
+		    </div>
+	  	</div>
+	  	<div class="modal fade" id="modal_material">
+			<div class="modal-dialog">
+	  			<div class="modal-content">
+			        <div class="modal-header">
+			        	<h4 class="modal-title">Información</h4>
+			          	<button type="button" class="close" data-dismiss="modal">&times;</button>
+			        </div>
+			        <div class="modal-body" >Debe indicar un material existente
+			        </div>
+			        <div class="modal-footer">
+			        	<button type="button" class="btn btn-primary" data-dismiss="modal">Aceptar</button>
+			        </div>  
+		      	</div>
+		    </div>
+	  	</div>
+	  	<div class="modal fade" id="modal_valid_data">
+			<div class="modal-dialog">
+	  			<div class="modal-content">
+			        <div class="modal-header">
+			        	<h4 class="modal-title">Información</h4>
+			          	<button type="button" class="close" data-dismiss="modal">&times;</button>
+			        </div>
+			        <div class="modal-body" >El Importe y la Cantidad deben ser mayor a 0
+			        </div>
+			        <div class="modal-footer">
+			        	<button type="button" class="btn btn-primary" data-dismiss="modal">Aceptar</button>
+			        </div>  
+		      	</div>
+		    </div>
+	  	</div>
+	  	<!--#######     Materiales     ######-->
+	  	<div class="modal fade" id="modal_exportar_data">
+			<div class="modal-dialog">
+	  			<div class="modal-content">
+			        <div class="modal-header">
+			        	<h4 class="modal-title">Información</h4>
+			          	<button type="button" class="close" data-dismiss="modal">&times;</button>
+			        </div>
+			        <div class="modal-body" >No existen registros para exportar
+			        </div>
+			        <div class="modal-footer">
+			        	<button type="button" class="btn btn-primary" data-dismiss="modal">Aceptar</button>
+			        </div>  
+		      	</div>
+		    </div>
+	  	</div>
+	  	<div class="modal fade" id="modal_exportar_materiales">
+			<div class="modal-dialog">
+	  			<div class="modal-content">
+			        <div class="modal-header">
+			        	<h4 class="modal-title">Información</h4>
+			          	<button type="button" class="close" data-dismiss="modal">&times;</button>
+			        </div>
+			        <div class="modal-body">¿Esta seguro de exportar la información a un archivo Excel?</div>
+			        <div class="modal-footer">
+			        	<a class="btn btn-primary"  href="" onclick="cerrarModalesMaterial('modal_exportar_materiales');" id="modal_export_material">Aceptar</a>
+			        	<button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+			        </div>  
+		      	</div>
+		    </div>
+	  	</div>
+	  	<div class="modal fade" id="activar_material">
+			<div class="modal-dialog">
+	  			<div class="modal-content">
+			        <div class="modal-header">
+			        	<h4 class="modal-title">Información</h4>
+			          	<button type="button" class="close" data-dismiss="modal">&times;</button>
+			        </div>
+			        <div class="modal-body">¿Está seguro que desea activar el material?</div>
+			        <div class="modal-footer">
+			        	<a class="btn btn-primary"  href="" id="id_activar_material">Aceptar</a>
+			        	<button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+			        </div>  
+		      	</div>
+		    </div>
+	  	</div>
+	  	<div class="modal fade" id="desactivar_material">
+			<div class="modal-dialog">
+	  			<div class="modal-content">
+			        <div class="modal-header">
+			        	<h4 class="modal-title">Información</h4>
+			          	<button type="button" class="close" data-dismiss="modal">&times;</button>
+			        </div>
+			        <div class="modal-body">¿Está seguro de dar de Baja el registro?</div>
+			        <div class="modal-footer">
+			        	<a class="btn btn-primary"  href="" onclick="cerrarModal();" id="id_desactivar_material">Aceptar</a>
+			        	<button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+			        </div>  
+		      	</div>
+		    </div>
+	  	</div>
+	  	<div class="modal fade" id="status_edicion">
+			<div class="modal-dialog">
+	  			<div class="modal-content">
+			        <div class="modal-header">
+			        	<h4 class="modal-title">Información</h4>
+			          	<button type="button" class="close" data-dismiss="modal">&times;</button>
+			        </div>
+			        <div class="modal-body">Solo podrá editar el contenido cuando el estado sea Activo</div>
+			        <div class="modal-footer">
+			        	<a class="btn btn-primary"  data-dismiss="modal">Aceptar</a>
+			        </div>  
+		      	</div>
+		    </div>
+	  	</div>
+	  	<div class="modal fade" id="modal_aprobar_material">
+			<div class="modal-dialog">
+	  			<div class="modal-content">
+			        <div class="modal-header">
+			        	<h4 class="modal-title">Mensaje del Sistema</h4>
+			          	<button type="button" class="close" data-dismiss="modal">&times;</button>
+			        </div>
+			        <div class="modal-body text-center">Si aprueba este material sera parte de almacen:
+			        	<p class="text-left" style="margin-left:32%;">Código = <span id="span_codigo"></span><br>
+			        	Situación = Aprobado <br>
+			        	Estado = Activo</p>
+			        </div>
+			        <div class="modal-footer">
+			        	<a class="btn btn-primary" id="href_aprobar" >Aceptar</a>
+			        </div>  
+		      	</div>
+		    </div>
+	  	</div>
+	  	<div class="modal fade" id="modal_desaprobar_material">
+			<div class="modal-dialog" style="max-width:60% !important;">
+	  			<div class="modal-content">
+			        <div class="modal-header">
+			        	<h4 class="modal-title">Desaprobar</h4>
+			          	<button type="button" class="close" data-dismiss="modal">&times;</button>
+			        </div>
+			        <div class="modal-body">
+			        	<div class="form-group">
+					      <div class="row">
+					        <div class="col-sm-2">Observaciones</div>
+					        <div class="col-sm-10">
+					         <textarea class="form-control" rows="4" name="observacion_desaprobar" id="observacion_desaprobar" maxlength="200"></textarea>
+					         <div class="text-invalid" id="error_id_material_desaprobar" style="display:none;">This field is required.</div>
+					         <input type="hidden" id="id_material_desaprobar" name="id_material_desaprobar">
+					        </div>
+					      </div>
+					    </div>
+			        </div>
+			        <div class="modal-footer">
+			        	<a class="btn btn-primary"  id="id_activar_material" onclick="desaprobarMaterial();">Grabar</a>
+			        	<button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+			        </div>  
+		      	</div>
+		    </div>
+	  	</div>
+	  	<div class="modal fade" id="modal_notificar_msg">
+			<div class="modal-dialog">
+	  			<div class="modal-content">
+			        <div class="modal-header">
+			        	<h4 class="modal-title">Información</h4>
+			          	<button type="button" class="close" data-dismiss="modal">&times;</button>
+			        </div>
+			        <div class="modal-body">Mensaje enviado con éxito</div>
+			        <div class="modal-footer">
+			        	<a class="btn btn-primary"  data-dismiss="modal">Aceptar</a>
+			        </div>  
+		      	</div>
+		    </div>
+	  	</div>
+	    {% block footer %}
+	    	<footer class="footer border-top p-2">
+	            <div class="container-fluid">
+	                <div class="row">
+	                    <div class="col text-muted">
+	                        Desarrollador por la empresa Lupatuid - 2018 V1.0.0
+	                    </div>
+	                </div>
+	            </div>
+	        </footer>
+	    {% endblock %}
+	    <script src="https://code.jquery.com/jquery-1.9.1.min.js" ></script>
+	    <script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
+	    <script src="{% static "js/jquery.alphanum.js" %}"></script>
+	    <script src="{% static "js/bootstrap-datepicker.js" %}"></script>
+		
+		<script src="{% static "js/functions.js" %}?v=192"></script>
+		<script type="text/javascript" src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
+	    <script src="{% static "js/bootstrap.min.js" %}"></script>  
+	    {% block extrajs %}
+		{% endblock %}
+	</body>
+</html>

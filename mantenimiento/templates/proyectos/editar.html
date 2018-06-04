@@ -1,0 +1,184 @@
+{% extends "base.html" %}
+{% block title %}Sistema de Gestión Administrativa{% endblock %}
+{% block content %}
+<div class="container" style="max-width:100%;">
+  <br>
+  <form action="/editar/proyecto" method="POST" id="form_editar_proyecto">{% csrf_token %}
+    <div class="row">
+      <div class="col-sm-8 text-left">Mantenimiento <i class="fa fa-chevron-right"></i> Proyectos <i class="fa fa-chevron-right"></i> Editar</div>
+      <div class="col object-tool">
+        <div class="row offset-1">
+          <div class="col-sm-2 offset-5 text-right hide" id="boton_editar">
+            <div class="col">
+              <a class="link-button btn link-submit" href='#' data-form='form_editar_proyecto' data-formmain="editarproyectos">
+                <i class="fa fa-save"></i>
+                <div class="col"> Grabar</div>
+              </a>
+            </div>
+          </div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+          <div class="col-sm-2 text-right" id="boton_regresar">
+            <div class="col">
+              <a class="link-button btn" href='{% url 'proyectos' %}'>
+                <i class="fa fa-reply"></i>
+                <div class="col"> Regresar</div>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div> 
+    <div class="form-group editarproyectos">
+        <div class="row">
+            <div class="col-sm-2 text-left"><label for="id_estado">Estado</label></div>
+            <div class="col-sm-3 text-left">
+              <select class="form-control remove-selected"  name="id_estado" id="id_estado" required>
+                  <option value="">Seleccionar</option>
+                  {% for edo in estado %}
+                    <option value="{{ edo.id_generalDetalle}}" {% if edo.id_generalDetalle ==  proyecto.vc_codEstado.id_generalDetalle  %}selected="selected"{% endif %}>{{ edo.vc_valor1 }}</option>
+                  {% endfor %}                        
+                </select>
+                <div class="invalid__id_estado text-invalid"></div>
+            </div>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="row">
+            <div class="col-sm-2 text-left">Tipo Documento</div>
+            <div class="col-sm-3 text-left">
+                <select class="form-control"  name="tipo_documento" id="tipo_documento" disabled>
+                  <option value="">Seleccionar</option>
+                  {% for documento in documentos %}
+                    <option value="{{ documento.id_generalDetalle}}" {% if documento.id_generalDetalle ==  proyecto.id_cliente.vc_codTipoDocumento.id_generalDetalle  %}selected="selected"{% endif %}>{{ documento.vc_valor1 }}</option>
+                  {% endfor %}                        
+                </select>
+            </div>
+        </div>
+    </div>
+    <div class="form-group editarproyectos">
+        <div class="row">
+            <div class="col-sm-2 text-left"><label for="numero_documento">Número Documento</label></div>
+            <div class="col-sm-3 text-left">
+                <input class="form-control remove-selected" type="search" value="{{proyecto.id_cliente.vc_numDocumento}}" id="numero_documento" name="numero_documento" required>
+                <div class="invalid__numero_documento text-invalid"></div>
+            </div>
+            <div class="col-sm-2 text-left cursor" onclick="buscarDocumento()">
+              <i class="fa fa-search"></i>
+            </div>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="row">
+            <div class="col-sm-2 text-left">Cliente</div>
+            <div class="col-sm-6 text-left">
+              <input class="form-control" type="text" value="{{proyecto.id_cliente.vc_razonSocial}}" id="razon_social" disabled>
+              <input class="form-control" type="hidden" value="{{proyecto.id_cliente.id_cliente}}" id="id_cliente" name="id_cliente">
+            </div>
+        </div>
+    </div>
+    <div class="form-group editarproyectos">
+        <div class="row">
+            <div class="col-sm-2 text-left"><label for="nombre_proyecto">Nom. Proyecto</label></div>
+            <div class="col-sm-6 text-left">
+              <input class="form-control remove-selected" type="text" value="{{proyecto.vc_nombreProyecto}}" id="nombre_proyecto" name="nombre_proyecto" required>
+              <div class="invalid__nombre_proyecto text-invalid"></div>
+            </div>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="row">
+            <div class="col-sm-2 text-left">Distrito Proyecto</div>
+            <div class="col-sm-3 text-left">
+                <select class="form-control"  name="id_ubigeo" id="id_ubigeo">
+                  <option value="">Seleccionar</option>
+                  {% for ubig in ubigeo %}
+                    {% if ubig.vc_descripcion|length > 4%}
+                    <option value="{{ ubig.id_ubigeo}}" {% if  ubig.id_ubigeo ==  proyecto.id_ubigeo.id_ubigeo  %}selected="selected"{% endif %}>{{ ubig.vc_descripcion }}</option>
+                    {% endif %}
+                  {% endfor %}                        
+                </select>
+            </div>
+        </div>
+    </div>
+     <div class="form-group">
+        <div class="row">
+            <div class="col-sm-2 text-left">Dirección del Proyecto</div>
+            <div class="col-sm-6 text-left">
+              <input class="form-control" type="text" value="{{proyecto.vc_direccion}}" name="direccion" id="direccion" maxlength="120">
+            </div>
+        </div>
+    </div>
+    <div class="form-group">
+      <div class="row" class="datepicker" data-date-format="mm/dd/yyyy">
+          <div class="col-sm-2 text-left">Fecha Aprobación</div>
+          <div class="col-sm-2 text-left">
+              <div class="input-group">
+                  <input class="form-control py-2 border-right-0 border datep block-datep" data-date-format="mm/dd/yyyy" type="text" value="{{proyecto.dt_fecAprobacion|date:"d/m/Y"}}" id="fecha_aprobacion"  name="fecha_aprobacion" readonly>
+                  <span class="input-group-append">
+                      <div class="input-group-text d-flex align-items-center h100"><i class="fa fa-calendar"></i></div>
+                  </span>
+              </div>
+          </div>
+      </div>
+    </div>
+     <div class="form-group">
+          <div class="row" class="datepicker" data-date-format="mm/dd/yyyy">
+              <div class="col-sm-2 text-left">Fecha Inicio</div>
+              <div class="col-sm-2 text-left">
+                  <div class="input-group">
+                      <input class="form-control py-2 border-right-0 border datep block-datep block-datep" data-date-format="mm/dd/yyyy" type="text" value="{{proyecto.dt_fecInicio|date:"d/m/Y"}}" id="fecha_inicio"  name="fecha_inicio" readonly>
+                      <span class="input-group-append">
+                          <div class="input-group-text d-flex align-items-center h100"><i class="fa fa-calendar"></i></div>
+                      </span>
+                  </div>
+              </div>
+          </div>
+      </div>
+       <div class="form-group">
+          <div class="row" class="datepicker" data-date-format="mm/dd/yyyy">
+              <div class="col-sm-2 text-left">Fecha Cierre</div>
+              <div class="col-sm-2 text-left">
+                  <div class="input-group">
+                      <input class="form-control py-2 border-right-0 border datep block-datep" data-date-format="mm/dd/yyyy" type="text" value="{{proyecto.dt_fecCierre|date:"d/m/Y"}}" id="fecha_cierre"  name="fecha_cierre" readonly>
+                      <span class="input-group-append">
+                          <div class="input-group-text d-flex align-items-center h100"><i class="fa fa-calendar"></i></div>
+                      </span>
+                  </div>
+              </div>
+          </div>
+      </div>
+    <div class="form-group">
+        <div class="row">
+            <div class="col-sm-2 text-left">Supervisor de Obra</div>
+            <div class="col-sm-6 text-left">
+                <select class="form-control"  name="id_colaborador"  id="id_colaborador">
+                  <option value="">Seleccionar</option>
+                  {% for col in colaborador %}
+                    <option value="{{ col.id_colaborador}}" {% if col.id_colaborador ==  proyecto.id_colaborador.id_colaborador  %}selected="selected"{% endif %}>{{col.vc_nomColaborador}}  {{col.vc_apePatColaborador}}</option>
+                  {% endfor %}
+                </select>
+            </div>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="row">
+            <div class="col-sm-2 text-left">Contacto</div>
+            <div class="col-sm-6 text-left">
+              <input class="form-control" type="text" value="{{proyecto.vc_nomContacto}}" name="contacto"  id="contacto" maxlength="120">
+            </div>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="row">
+            <div class="col-sm-2 text-left">Tel. Contacto</div>
+            <div class="col-sm-2 text-left">
+              <input class="form-control" type="text" value="{{proyecto.vc_telfContacto}}" name="tlf" id="tlf" maxlength="10">
+            </div>
+        </div>
+    </div>
+    <input  type="hidden" value="{{proyecto.id_proyecto}}" name="id_proyecto">
+    <input  type="hidden" value="{{idVista}}" id="idVistaProyecto">
+    <input  type="hidden" value="{{idModal}}" id="idModal">
+  </form>
+  <br>
+</div>
+{% endblock %}

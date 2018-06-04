@@ -1,0 +1,119 @@
+{% extends "base.html" %}
+{% block title %}Sistema de Gestión Administrativa{% endblock %}
+{% block content %}
+<div class="container" style="max-width:100%;">
+  <br>
+  <form action="/guardarConformidad" method="POST" id="form-conformidad">{% csrf_token %}
+    <div class="row">
+      <div class="col-sm-6 text-left">Almacen 
+        <i class="fa fa-chevron-right"></i> Ingresos 
+        <i class="fa fa-chevron-right"></i> Editar
+        <i class="fa fa-chevron-right"></i> Conformidad
+      </div>
+      <div class="col object-tool">
+        <div class="row offset-1">
+          <div class="col-sm-2 offset-5 text-right">
+            <div class="col">
+              <a class="link-button btn" href='#'>
+                <i class="fa fa-angellist color-block"></i>
+                <div class="col color-block"> Conformidad</div>
+              </a>
+            </div>
+          </div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+          <div class="col-sm-2 text-right" id="boton_editar">
+            <div class="col">
+              <a class="link-button btn link-submit" href='#' data-form='form-conformidad' data-formmain="conformingresos">
+                <i class="fa fa-save"></i>
+                <div class="col"> Grabar</div>
+              </a>
+            </div>
+          </div>
+          <div class="col-sm-2 text-right">
+            <div class="col">
+              <a class="link-button btn" href='{% url 'editar' idIngreso 1 %}'>
+                <i class="fa fa-reply"></i>
+                <div class="col"> Regresar</div>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <br>
+    <div class="form-group conformingresos">
+      <div class="row">
+        <div class="col-sm-2 text-left"><label for="total_compra">Imp. Total Compra</label></div>
+        <div class="col-sm-2 text-left">
+          <input class="form-control remove-selected" type="text" name="total_compra" id="total_compra" required {%if importeConformidad %}value="{{importeConformidad}}" {% endif %} maxlength="10">
+          <div class="invalid__total_compra text-invalid"></div>
+        </div>
+      </div>
+    </div>
+    <div class="form-group">
+      <div class="row">
+        <div class="col-sm-2 text-left">Observaciones</div>
+        <div class="col-sm-8 text-left">
+          <textarea class="form-control" rows="4" name="observaciones">{%if obConformidad %}{{obConformidad}}{% endif %}</textarea>
+        </div>
+      </div>
+    </div>
+    <div class="form-group">
+      <div class="row">
+        <div class="col-sm-2 text-left">Estado</div>
+        <div class="col-sm-2 text-left">
+          <select class="form-control" name="estado" id="estado"> 
+          {%if estadoConformidad %}
+            <option value="{{estadoConformidad.id_generalDetalle}}">{{estadoConformidad.vc_valor1}}</option>
+          {% endif %}         
+          </select>
+        </div>
+      </div>
+    </div>
+    <input type="hidden" name="idIngreso" value="{{idIngreso}}">
+    <input type="hidden" name="idConformidadEdit" id="idConformidadEdit" {%if idConformidad %}value="{{idConformidad}}"{% endif %}>
+    <br>
+    <table class="table table-bordered">
+      <thead>
+        <tr>
+          <th scope="col">Dirección Gasto</th>
+          <th scope="col">Código</th>
+          <th scope="col">Descripción</th>
+          <th scope="col">Uni. Med</th>
+          <th scope="col">Conf. O.C.</th>
+          <th scope="col">Cantidad</th>
+          <th scope="col">Total</th>
+          <th scope="col">Precio Unit.</th>
+          <th scope="col">IGV</th>
+          <th scope="col">Importe</th>
+          <th scope="col">Conf. Adm.</th>
+        </tr>
+      </thead>
+      <tbody id="tabla_conformidad">                
+        {% for detalle in detalles %}
+          <tr id="{{forloop.counter}}">
+            <td id="direccion_gasto-{{ forloop.counter }}">{{detalle.vc_codDireccionGasto.vc_valor1}}</td>
+            <td id="codigo_material-{{ forloop.counter }}">{{detalle.id_materiales.vc_codigo}}</td>
+            <td id="descripcion_detalle-{{ forloop.counter }}">{{detalle.id_materiales.vc_descripcion}}</td>
+            <td id="unidad_medida-{{ forloop.counter }}">{{detalle.id_materiales.id_unidadMedida.vc_descripcionCorta}}</td>
+            <td id="check1_detalle-{{ forloop.counter }}">
+              <input class='text-center' type='checkbox' id='check_1_{{ forloop.counter }}' value='{{detalle.bl_conformidadOC}}' onclick="recorrerConformidad()">
+            </td>
+            <td id="cantidad_detalle-{{ forloop.counter }}">{{detalle.nu_cantidad}}</td>
+            <td id="total_detalle-{{ forloop.counter }}">{{detalle.nu_totalIngreso}}</td>
+            <td id="precio_detalle-{{ forloop.counter }}">{{detalle.nu_precioUnitario}}</td>
+            <td id="igv_detalle-{{ forloop.counter }}">{{detalle.nu_igv}}</td>
+            <td id="importe_detalle-{{ forloop.counter }}">{{detalle.nu_Importe}}</td>
+            <td id="id_detalle-{{ forloop.counter }}" class="hide">{{detalle.id_ingresoDetalle}}</td>
+            <td id="check2_detalle-{{ forloop.counter }}"><input class='text-center' type='checkbox' id='check_2_{{ forloop.counter }}' value='{% if detalle.bl_conformidadAdm %}{{detalle.bl_conformidadAdm}}{% else %}{{detalle.bl_conformidadAdm}}{% endif %}' onclick="recorrerConformidad()"></td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    <br>
+    <br>
+    <input id="idConformidad" value="1" type="hidden">
+    <input type="hidden" name="array" id="array" value='[]'> 
+    <input type="hidden" name="idModalConf" id="idModalConf" value='{{idModal}}'> 
+  </form>
+</div>      
+{% endblock %}

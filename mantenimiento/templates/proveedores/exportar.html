@@ -1,0 +1,35 @@
+<table class="table table-striped">
+    <thead>
+          <tr>
+            <th>RUC</th>
+	        <th>Razón Social</th>
+            <th>Distrito</th>
+            <th>Dirección</th>
+            <th>Contacto</th>
+            <th>Telf. Contacto</th>
+            <th>Telf. Empresa</th>
+	        <th>Estado</th>
+	        <th>Opciones</th>
+          </tr>
+    </thead>
+    <tbody  id="tabla_proveedores">
+        {% if proveedores %}
+            {%for proveedor in proveedores%}
+                <tr>
+                    <td>{{proveedor.vc_rucproveedor}}</td>
+                    <td>{{proveedor.vc_razonsocial}}</td>
+                    <td>{{proveedor.id_ubigeo.vc_descripcion}}</td>
+                    <td>{{proveedor.vc_direccion}}</td>
+                    <td>{{proveedor.vc_contacto}}</td>
+                    <td>{{proveedor.vc_telfcontacto}}</td>
+                    <td>{{proveedor.vc_telfempresa}}</td>
+                    <td>{{proveedor.vc_codestado.vc_valor1}}</td>
+                </tr>	
+            {% endfor %} 
+            {% else %}
+            <tr>
+                <td colspan="8" class="text-center">No se encontraron registros</td>
+            </tr> 
+        {% endif %}
+    </tbody>
+</table>

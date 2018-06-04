@@ -1,0 +1,46 @@
+<table class="table table-striped" id="tabla_poraprobar" name="tabla_poraprobar">
+    <thead>
+      	<tr>
+	        <th>Código</th>
+	        <th style="width:40%;">Descripción</th>
+	        <th>Und. Med</th>
+	        <th>Valor</th>
+	        <th>Situación</th>
+	        <th>Num. Notificación</th>
+	        <th>Estado</th>
+	        <th>Opciones</th>
+      	</tr>
+    </thead>
+    <tbody  id="data_poraprobar">
+    	{% if materiales %}
+			{%for material in materiales %}
+				<tr id="tr_{{forloop.counter}}" class="tr_proyectos">
+					<td>{% if material.vc_codigo == None %}{% else %}{{material.vc_codigo}}{% endif %}</td>
+				    <td style="width:40%;">{{material.vc_descripcion}}</td>
+				    <td>{{material.id_unidadMedida.vc_descripcionCorta}}</td>
+				    <td style="text-align: right;">{{material.nu_valor}}</td>
+				    <td>{{material.id_codSituacion.vc_valor1}}</td>
+				    <td>{{material.vc_numNotificacion}}</td>
+				    <td>{{material.id_codEstado.vc_valor1}}</td>
+			    	<td>
+				    	<div class='row margin-button' id="{{material.id_materiales}}" >
+			                <div class='cursor'>
+			                    <a  class="link-button" onclick="generarCodigo({{material.id_materiales}});"><i class='fa fa-check'></i></a>
+			                </div>
+				            <div class='cursor margin-button'>
+				                  <a href="{% url 'verificar' material.id_materiales %}" class="link-button"><i class='fa fa-vine'></i></a>
+				            </div>
+			                <div class='cursor margin-button'>
+			                    <a class="link-button" onclick="modalDesaprobarMaterial({{material.id_materiales}});"><i class='fa fa-times'></i></a>
+			                </div>
+			            </div>
+				    </td>
+				</tr>
+			{% endfor %}
+			{% else %}	
+			<tr>
+		        <td colspan="8" class="text-center">No se encontraron registros</td>
+		    </tr> 	  
+		{% endif %}
+    </tbody>
+</table>

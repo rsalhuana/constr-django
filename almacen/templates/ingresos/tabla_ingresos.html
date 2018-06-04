@@ -1,0 +1,52 @@
+{% if ingresoCabecera %}
+    {% for ingreso in ingresoCabecera%}
+        <tr id="tr_{{forloop.counter}}" class="tr_ingresos">
+            <td>{{ingreso.id_proyecto.vc_nombreProyecto}}</td>
+            <td>{{ingreso.dt_emision|date:"d-m-Y"}}</td>
+            <td>{{ingreso.vc_codTipoComprobante.vc_valor1}}</td>
+            <td>{{ingreso.vc_serieComprobante}}</td>
+            <td>{{ingreso.vc_numComprobante}}</td>
+            <td>{{ingreso.vc_codCondicionPago.vc_valor1}}</td>
+            <td>{{ingreso.id_proveedor.vc_rucproveedor}}</td>
+            <td>{{ingreso.id_proveedor.vc_razonsocial}}</td>
+            <td>{{ingreso.fl_total}}</td>
+            <td>{{ingreso.vc_codEstado.vc_valor1}}</td>
+            <td>
+                <div class='row margin-button'>
+                    {% if ingreso.vc_codEstado.id_generalDetalle ==  8  or ingreso.vc_codEstado.id_generalDetalle ==  11 %}
+                        <div class='cursor'>
+                            <a href="{% url 'editar' ingreso.id_ingresoCabecera 1 %}" class="link-button"><i class='fa fa-pencil-square-o'></i></a>
+                        </div>
+                    {% endif %}
+                    {% if ingreso.vc_codEstado.id_generalDetalle ==  9 %}
+                        <div class='cursor'>
+                            <a href="#" class="link-button"  onclick="mensajeRevConforme()"><i class='fa fa-pencil-square-o'></i></a>
+                        </div>
+                    {% endif %}
+                    {% if ingreso.vc_codEstado.id_generalDetalle ==  10 %}
+                        <div class='cursor margin-button' onclick='setIngreso({{ingreso.id_ingresoCabecera}})' data-toggle="modal" data-target="#myModal">
+                            <i class='fa fa-check'></i>
+                        </div>
+                    {% else %}
+                        {% if ingreso.vc_codEstado.id_generalDetalle ==  8 %}
+                        <div class='cursor margin-button' onclick='setIngreso({{ingreso.id_ingresoCabecera}})' data-toggle="modal" data-target="#myModal">
+                            <i class='fa fa-times'></i>
+                        </div>
+                        {% else %}
+                         <div class='cursor margin-button' onclick="mensajeEdoRegistrado()"><i class='fa fa-times'></i>
+                        </div>
+                        {% endif %}
+                    {% endif %}
+                        <div class='cursor margin-button' onclick='verIngreso({{ingreso.id_ingresoCabecera}})'>
+                            <a href="{% url 'editar' ingreso.id_ingresoCabecera 0 %}" class="link-button"><i class='fa fa-eye'></i></a>
+                        </div>
+                </div>
+                <input type="hidden" id="estadoIngreso_{{ingreso.id_ingresoCabecera}}" name="estadoIngreso_{{ingreso.id_ingresoCabecera}}" value="{{ingreso.vc_codEstado.id_generalDetalle}}">
+            </td>
+        </tr>
+    {% endfor %}   
+    {% else %}
+        <tr>
+            <td colspan="11" class="text-center" id="no_registro">No se encontraron registros</td>
+        </tr> 
+{% endif %}

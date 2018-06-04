@@ -1,0 +1,25 @@
+# Autenticación de Usuario
+
+App para manejar la autenticación de usuario de la plataforma
+
+## Instalación
+
+1. Copiar la app en su proyecto
+1. Incluir el archivo de URL en las URL globales del proyecto
+1. Añadir al setting de Django 
+  from django.core.urlresolvers import reverse_lazy
+  LOGIN_REDIRECT_URL = reverse_lazy('home')
+  LOGOUT_REDIRECT_URL = reverse_lazy('login')
+
+  EMAIL_USE_TLS = True
+  EMAIL_HOST = 'Dirección de Servidor SMTP'
+  EMAIL_PORT = PUERTO
+  EMAIL_HOST_USER = 'correo@servidor'
+  EMAIL_HOST_PASSWORD = 'Password'
+  EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+1. Instalar django-admin-view-permission e incluir en APP_INSTALLED al inicio
+1. Crear el archivo login.html en template/admin con la siguiente linea: {% extends "accounts-login.html" %}
+1. Crear el archivo base_site.html en template/admin extendiendo de admin/base.html y sobreescribiendo el bloque {% block usertools %} con un enlace a {{ site_url }}. Añadir Menú en el bloque {% block nav-global %} 
+
+
+Desarrollador por Yeinso Blanco para la empresa Lupatuid. 2018

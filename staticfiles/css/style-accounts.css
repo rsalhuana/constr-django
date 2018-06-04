@@ -1,0 +1,48 @@
+body.login > div.container.main{
+    background-image: url("../img/logo.png");
+    background-repeat: no-repeat;
+    background-size: 45%;
+    background-position: center; 
+}
+
+.container.security{
+    min-height: 74.9vh;
+}
+.container.security2{
+    min-height: 58.3vh;
+}
+.container.main{
+    padding-bottom: 0;
+}
+#header{
+    height: auto !important;
+}
+
+#header  nav{
+    background: transparent !important;  
+    border-top: 1px solid grey;
+}
+#header  nav li{
+    list-style: none;
+}
+
+#user_form p.deletelink-box a{
+    box-sizing: content-box;
+}
+
+.module caption{
+    caption-side: top;
+}
+
+fieldset.module div.form-row > div{
+    width: 100%;
+}
+
+.user-red{
+    color:red;
+}
+
+.user-blue{
+    color:#007bff;
+    text-decoration: underline;
+}

@@ -1,0 +1,285 @@
+{% extends "base.html" %}
+{% block title %}Sistema de Gestión Administrativa{% endblock %}
+
+{% block content %}
+<div class="container" style="max-width:100%;">
+  <br>
+  <form action="" method="POST" accept-charset="utf-8"  id="form-save-materiales">{% csrf_token %}
+    <div class="row">
+      <div class="col-sm-8 text-left">Mantenimiento <i class="fa fa-chevron-right"></i> Materiales/Herramientas <i class="fa fa-chevron-right"></i> Nuevo</div>
+      <div class="col object-tool">
+        <div class="row offset-1">
+          <div class="col-sm-2 offset-5 text-right">
+            <div class="col" id="btn_save">
+              <a class="link-button btn link-submit" href='#' data-form='form-save-materiales' >
+                <i class="fa fa-save"></i>
+                <div class="col"> Grabar</div>
+              </a>
+          </div>
+            </div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+          <div class="col-sm-2 text-right">
+            <div class="col">
+              <a class="link-button btn" href='{% url 'materiales' %}'>
+                <i class="fa fa-reply"></i>
+                <div class="col"> Regresar</div>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="form-group">
+      <div class="row">
+          <div class="col-sm-2 text-left">
+              Estado
+          </div>
+           <div class="col-sm-3 text-left">
+            <input class="form-control" value="Activo" readonly>
+          </div>
+      </div>
+    </div>
+    <div class="form-group">
+      <div class="row">
+          <div class="col-sm-2 text-left">
+              Situación
+          </div>
+           <div class="col-sm-3 text-left">
+            <input class="form-control" value="Por Aprobar" readonly>
+          </div>
+      </div>
+    </div>
+    <div class="form-group">
+        <div class="row">
+            <div class="col-sm-2 text-left">
+                {{ form.vc_codigo.label_tag }}
+            </div>
+             <div class="col-sm-3 text-left">
+              {{ form.vc_codigo }}
+            </div>
+            <div class="col-sm-3 form-text text-muted">
+                {% if form.vc_codigo.help_text %}
+                {{ form.vc_codigo.help_text|safe }}
+                {% endif %}
+            </div>
+            <div class="form-control-feedback offset-2">
+                <span class="text-danger align-middle">
+                    {{ form.vc_codigo.errors }}
+                </span>
+            </div>
+        </div>
+    </div>
+    <div class="form-group">
+      <div class="row">
+          <div class="col-sm-2 text-left">
+              {{ form.id_codTipoGasto.label_tag }}
+          </div>
+           <div class="col-sm-4 text-left">
+            {{ form.id_codTipoGasto }}
+          </div>
+          <div class="col-sm-3 form-text text-muted">
+              {% if form.vid_codTipoGasto.help_text %}
+              {{ form.id_codTipoGasto.help_text|safe }}
+              {% endif %}
+          </div>
+          <div class="form-control-feedback offset-2">
+              <span class="text-danger align-middle">
+                  {{ form.id_codTipoGasto.errors }}
+              </span>
+          </div>
+      </div>
+    </div>
+    <div class="form-group">
+      <div class="row">
+          <div class="col-sm-2 text-left">
+              {{ form.id_codFamilia.label_tag }}
+          </div>
+           <div class="col-sm-4 text-left">
+            {{ form.id_codFamilia }}
+          </div>
+          <div class="col-sm-3 form-text text-muted">
+              {% if form.id_codFamilia.help_text %}
+              {{ form.id_codFamilia.help_text|safe }}
+              {% endif %}
+          </div>
+          <div class="form-control-feedback offset-2">
+              <span class="text-danger align-middle">
+                  {{ form.id_codFamilia.errors }}
+              </span>
+          </div>
+      </div>
+    </div>
+    <div class="form-group">
+      <div class="row">
+          <div class="col-sm-2 text-left">
+              {{ form.id_codClasificacion.label_tag }}
+          </div>
+           <div class="col-sm-4 text-left">
+            {{ form.id_codClasificacion }}
+          </div>
+          <div class="col-sm-3 offset-4 form-text text-muted">
+              {% if form.id_codClasificacion.help_text %}
+              {{ form.id_codClasificacion.help_text|safe }}
+              {% endif %}
+          </div>
+          <div class="form-control-feedback">
+              <span class="text-danger align-middle">
+                  {{ form.id_codClasificacion.errors }}
+              </span>
+          </div>
+      </div>
+    </div>
+    <div class="form-group">
+        <div class="row">
+            <div class="col-sm-2 text-left">
+                {{ form.vc_descripcion.label_tag }}
+            </div>
+             <div class="col-sm-6 text-left">
+              {{ form.vc_descripcion }}
+            </div>
+            <div class="col-sm-3 form-text text-muted">
+                {% if form.vc_descripcion.help_text %}
+                {{ form.vc_descripcion.help_text|safe }}
+                {% endif %}
+            </div>
+            <div class="form-control-feedback offset-2">
+                <span class="text-danger align-middle">
+                    {{ form.vc_descripcion.errors }}
+                </span>
+            </div>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="row">
+            <div class="col-sm-2 text-left">
+                {{ form.id_codColor.label_tag }}
+            </div>
+             <div class="col-sm-3 text-left">
+              {{ form.id_codColor }}
+            </div>
+            <div class="col-sm-3 offset-4 form-text text-muted">
+                {% if form.id_codColor.help_text %}
+                {{ form.id_codColor.help_text|safe }}
+                {% endif %}
+            </div>
+            <div class="form-control-feedback">
+                <span class="text-danger align-middle">
+                    {{ form.id_codColor.errors }}
+                </span>
+            </div>
+        </div>
+    </div>
+    <div class="form-group" id="id_new_color">
+      <div class="row">
+             <div class="col-sm-3  offset-2 text-left">
+              <input class="form-control" id="id_vc_valor1" name="vc_valor1" maxlength="45" readonly>
+            </div>
+      </div>
+    </div>
+    <div class="form-group">
+        <div class="row">
+            <div class="col-sm-2 text-left">
+                {{ form.nu_valor.label_tag }}
+            </div>
+             <div class="col-sm-1 text-left">
+              {{ form.nu_valor }}
+            </div>
+            <div class="col-sm-6 form-text text-muted">
+                {% if form.nu_valor.help_text %}
+                {{ form.nu_valor.help_text|safe }}
+                {% endif %}
+            </div>
+            <div class="form-control-feedback offset-2">
+                <span class="text-danger align-middle">
+                    {{ form.nu_valor.errors }}
+                </span>
+            </div>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="row">
+            <div class="col-sm-2 text-left">
+                {{ form.id_unidadMedida.label_tag }}
+            </div>
+             <div class="col-sm-2 text-left">
+              {{ form.id_unidadMedida }}
+            </div>
+            <div class="col-sm-5 form-text text-muted">
+                {% if form.id_unidadMedida.help_text %}
+                {{ form.id_unidadMedida.help_text|safe }}
+                {% endif %}
+            </div>
+            <div class="form-control-feedback offset-2">
+                <span class="text-danger align-middle">
+                    {{ form.id_unidadMedida.errors }}
+                </span>
+            </div>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="row">
+            <div class="col-sm-2 text-left">
+                {{ form.nu_stockMinimo.label_tag }}
+            </div>
+             <div class="col-sm-1 text-left">
+              {{ form.nu_stockMinimo }}
+            </div>
+            <div class="col-sm-3 offset-4 form-text text-muted">
+                {% if form.nu_stockMinimo.help_text %}
+                {{ form.nu_stockMinimo.help_text|safe }}
+                {% endif %}
+            </div>
+            <div class="form-control-feedback">
+                <span class="text-danger align-middle">
+                    {{ form.nu_stockMinimo.errors }}
+                </span>
+            </div>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="row">
+            <div class="col-sm-2 text-left">
+                {{ form.nu_stockMaximo.label_tag }}
+            </div>
+             <div class="col-sm-1 text-left">
+              {{ form.nu_stockMaximo }}
+            </div>
+            <div class="col-sm-3 offset-4 form-text text-muted">
+                {% if form.nu_stockMaximo.help_text %}
+                {{ form.nu_stockMaximo.help_text|safe }}
+                {% endif %}
+            </div>
+            <div class="form-control-feedback">
+                <span class="text-danger align-middle">
+                    {{ form.nu_stockMaximo.errors }}
+                </span>
+            </div>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="row">
+            <div class="col-sm-2 text-left">
+                {{ form.nu_stockActual.label_tag }}
+            </div>
+             <div class="col-sm-1 text-left">
+              {{ form.nu_stockActual }}
+            </div>
+            <div class="col-sm-6  form-text text-muted">
+                {% if form.nu_stockActual.help_text %}
+                {{ form.nu_stockActual.help_text|safe }}
+                {% endif %}
+            </div>
+            <div class="form-control-feedback offset-2">
+                <span class="text-danger align-middle offset-2">
+                    {{ form.nu_stockActual.errors }}
+                </span>
+            </div>
+        </div>
+    </div>
+   </form>
+  <br><br>
+</div>
+{% endblock %}
+{% load staticfiles %}
+{% block extrajs %}
+<script src="{% static 'js/functions-materiales.js' %}"></script>
+{% endblock %}

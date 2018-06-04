@@ -1,0 +1,69 @@
+<div class="modal fade" id="activar_proveedor">
+    <div class="modal-dialog">
+            <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Información</h4>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-body">¿Está seguro que desea activar el proveedor?</div>
+            <div class="modal-footer">
+                <a class="btn btn-primary"  href="" id="id_activar_proveedor">Aceptar</a>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+            </div>  
+            </div>
+    </div>
+    </div>
+    <div class="modal fade" id="desactivar_proveedor">
+    <div class="modal-dialog">
+            <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Información</h4>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-body">¿Está seguro de dar de Baja el registro?</div>
+            <div class="modal-footer">
+                <a class="btn btn-primary"  href="" onclick="cerrarModal();" id="id_desactivar_proveedor">Aceptar</a>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+            </div>  
+            </div>
+    </div>
+    </div>
+    {% if proveedores %}
+        {%for proveedor in proveedores%}
+            <tr id="tr_{{forloop.counter}}" class="tr_proveedores">
+                <td>{{proveedor.vc_rucproveedor}}</td>
+                <td>{{proveedor.vc_razonsocial}}</td>
+                <td>{{proveedor.id_ubigeo.vc_descripcion}}</td>
+                <td>{{proveedor.vc_direccion}}</td>
+                <td>{{proveedor.vc_contacto}}</td>
+                <td>{{proveedor.vc_telfcontacto}}</td>
+                <td>{{proveedor.vc_telfempresa}}</td>
+                <td>{{proveedor.vc_codestado.vc_valor1}}</td>
+                <td>
+                    <div class='row margin-button' id="{{proveedor.vc_codestado.id_generalDetalle}}" >
+                       {% if proveedor.vc_codestado.id_generalDetalle ==  1 %}
+                       <div class='cursor'>
+                           <a href="{% url 'editar_proveedor' proveedor.id_proveedor 1 %}" class="link-button"><i class='fa fa-pencil-square-o'></i></a>
+                       </div>
+                       {% endif %}
+                       
+                        <div class='cursor margin-button' onclick="modalStatusProveedor({{proveedor.id_proveedor}} , {{proveedor.vc_codestado.id_generalDetalle }});">
+                            {% if proveedor.vc_codestado.id_generalDetalle == 1 %}
+                                <i class='fa fa-times'></i>
+                            {% else %}
+                                <i class='fa fa-check'></i>
+                            {% endif %}
+                        </div>
+    
+                       <div class='cursor margin-button'>
+                           <a href="{% url 'editar_proveedor' proveedor.id_proveedor 0 %}" class="link-button"><i class='fa fa-eye'></i></a>
+                       </div>
+                   </div>
+               </td>
+            </tr>	
+        {% endfor %} 
+        {% else %}
+        <tr>
+            <td colspan="9" class="text-center" id="no_registro">No se encontraron registros</td>
+        </tr> 
+    {% endif %}

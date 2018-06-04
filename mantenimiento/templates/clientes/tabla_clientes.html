@@ -1,0 +1,66 @@
+<div class="modal fade" id="activar_cliente">
+<div class="modal-dialog">
+        <div class="modal-content">
+        <div class="modal-header">
+            <h4 class="modal-title">Información</h4>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+        </div>
+        <div class="modal-body">¿Está seguro que desea activar el cliente?</div>
+        <div class="modal-footer">
+            <a class="btn btn-primary"  href="" id="id_activar_cliente">Aceptar</a>
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+        </div>  
+        </div>
+</div>
+</div>
+<div class="modal fade" id="desactivar_cliente">
+<div class="modal-dialog">
+        <div class="modal-content">
+        <div class="modal-header">
+            <h4 class="modal-title">Información</h4>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+        </div>
+        <div class="modal-body">¿Está seguro de dar de Baja el registro?</div>
+        <div class="modal-footer">
+            <a class="btn btn-primary"  href="" onclick="cerrarModal();" id="id_desactivar_cliente">Aceptar</a>
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+        </div>  
+        </div>
+</div>
+</div>
+{% if clientes %}
+	{%for cliente in clientes%}
+		<tr id="tr_{{forloop.counter}}" class="tr_clientes">
+			<td>{{cliente.vc_codTipoDocumento.vc_codigo}}</td>
+		    <td>{{cliente.vc_numDocumento}}</td>
+		    <td>{{cliente.vc_razonSocial}}</td>
+		    <td>{{cliente.vc_direccion}}</td>
+            <td>{{cliente.vc_codEstado.vc_valor1}}</td>
+            <td>
+                <div class='row margin-button' id="{{cliente.vc_codEstado.id_generalDetalle}}" >
+                   {% if cliente.vc_codEstado.id_generalDetalle ==  1 %}
+                   <div class='cursor'>
+                       <a href="{% url 'editar_cliente' cliente.id_cliente 1 %}" class="link-button"><i class='fa fa-pencil-square-o'></i></a>
+                   </div>
+                   {% endif %}
+                   
+                    <div class='cursor margin-button' onclick="modalStatusCliente({{cliente.id_cliente}} , {{cliente.vc_codEstado.id_generalDetalle }});">
+                        {% if cliente.vc_codEstado.id_generalDetalle == 1 %}
+                            <i class='fa fa-times'></i>
+                        {% else %}
+                            <i class='fa fa-check'></i>
+                        {% endif %}
+                    </div>
+
+                   <div class='cursor margin-button'>
+                       <a href="{% url 'editar_cliente' cliente.id_cliente 0 %}" class="link-button"><i class='fa fa-eye'></i></a>
+                   </div>
+               </div>
+           </td>
+		</tr>	
+	{% endfor %} 
+	{% else %}
+    <tr>
+        <td colspan="9" class="text-center" id="no_registro">No se encontraron registros</td>
+    </tr> 
+{% endif %}

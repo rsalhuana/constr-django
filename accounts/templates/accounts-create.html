@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+
+{% block title %}Agregar Usuario{% endblock %}
+
+
+{% block breadc %}
+<li class="breadcrumb-item">Configuración</li>
+<li class="breadcrumb-item active"><a href="{% url 'accounts-index' %}">Usuario</a></li>
+<li class="breadcrumb-item active">Nuevo</li>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <form method="post">
+        {% csrf_token %}
+        {% for field in form %}
+        {% for error in field.errors %}
+        <p style="color: red">{{ error }}</p>
+        {% endfor %}
+        <div class="form-group row">
+            <label class="col-4 col-form-label">
+                {{ field.label_tag }}
+            </label>
+
+            <div class="col-8">
+                {{ field }}
+            </div>
+            <div class="col-8 offset-4 form-text text-muted">
+                {% if field.help_text %}
+                {{ field.help_text|safe }}
+                {% endif %}
+            </div>
+        </div>
+        {% endfor %}
+        <div class="col-12 text-center">
+            <button type="submit" class="btn btn-success"><i class="fa fa-user-plus"></i> Agregar</button>
+        </div>       
+    </form>
+</div>
+{% endblock %}

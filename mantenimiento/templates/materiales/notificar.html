@@ -1,0 +1,118 @@
+{% extends "base.html" %}
+{% block title %}Sistema de Gestión Administrativa{% endblock %}
+{% block content %}
+<div class="container" style="max-width:100%;">
+	<form action="/notificar/materiales" method="POST" accept-charset="utf-8"  id="form-notificar-materiales">{% csrf_token %}
+		<br>
+		<div class="row">
+			<div class="col-sm-8 text-left">Mantenimiento <i class="fa fa-chevron-right"></i> Materiales/Herramientas <i class="fa fa-chevron-right"></i> Notificar Nuevos</div>
+	      	<div class="col object-tool">
+		        <div class="row offset-1">
+		          <div class="col-sm-2 offset-5 text-right" id="id_notificar_poraprobar">
+		            <div class="col">
+		              <a class="link-button btn link-submit" href="" data-form="form-notificar-materiales">
+		                <i class="fa fa-envelope-o"></i>
+		                <div class="col"> Notificar</div>
+		              </a>
+		          </div>
+		            </div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+		          <div class="col-sm-2 text-right" id="id_regresar_poraprobar">
+		            <div class="col">
+		              <a class="link-button btn" href='{% url 'materiales' %}'>
+		                <i class="fa fa-reply"></i>
+		                <div class="col"> Regresar</div>
+		              </a>
+		            </div>
+		          </div>
+		        </div>
+		    </div>
+		</div>
+		<br>
+		<div class="form-group">
+	      <div class="row">
+	          <div class="col-sm-1 text-left">
+	              De
+	          </div>
+	           <div class="col-sm-8 text-left">
+	            <input class="form-control" value="{{user.email}}" name="id_from" readonly>
+	          </div>
+	      </div>
+	    </div>
+	    <div class="form-group">
+	      <div class="row">
+	          <div class="col-sm-1 text-left">
+	              Para
+	          </div>
+	           <div class="col-sm-8 text-left">
+	            <input class="form-control" value="{{toEmail.vc_valor1}}" name="id_to" readonly>
+	          </div>
+	      </div>
+	    </div>
+	    <div class="form-group">
+	      <div class="row">
+	          <div class="col-sm-1 text-left">
+	              CC
+	          </div>
+	           <div class="col-sm-8 text-left">
+	            <input class="form-control" type="text" name="id_cc" id="id_cc" value="" onkeypress="validarCorreo(this.value);">
+	            <div class="text-invalid" id="email_valid"></div>
+	          </div>
+	      </div>
+	    </div>
+	    <div class="form-group">
+	      <div class="row">
+	          <div class="col-sm-1 text-left">
+	              Asunto
+	          </div>
+	           <div class="col-sm-8 text-left">
+	            <input class="form-control" value="{{toEmail.vc_valor2}}" name="id_subject" readonly>
+	          </div>
+	      </div>
+	    </div>
+		<br>
+		{% if materiales %}
+			{%for material in materiales %}
+				<input type='hidden' name="id_notificados" value="{{material.id_materiales}}" >
+			{% endfor %}
+		{% endif %}
+		<input type='hidden' name="idNotificar" value="{{idNotificar}}" >
+		<input type='hidden' id="idNotificarMsg" value="{{idNotificar}}" >
+
+	</form>
+</div>
+<table class="table table-striped" id="tabla_notificar" name="tabla_notificar">
+    <thead>
+      	<tr>
+	        <th>Código</th>
+	        <th style="width:47%;">Descripción</th>
+	        <th>Und. Med</th>
+	        <th>Valor</th>
+	        <th>Situación</th>
+	        <th>Estado</th>
+      	</tr>
+    </thead>
+    <tbody  id="data_notificar">
+    	{% if materiales %}
+			{%for material in materiales %}
+				<tr id="tr_{{forloop.counter}}" class="tr_proyectos">
+					<td>{% if material.vc_codigo == None %}{% else %}{{material.vc_codigo}}{% endif %}</td>
+				    <td style="width:47%;">{{material.vc_descripcion}}</td>
+				    <td>{{material.id_unidadMedida.vc_descripcionCorta}}</td>
+				    <td style="text-align: right;">{{material.nu_valor}}</td>
+				    <td>{{material.id_codSituacion.vc_valor1}}</td>
+				    <td>{{material.id_codEstado.vc_valor1}}</td>
+				</tr>
+			{% endfor %}
+			{% else %}
+		    <tr>
+		        <td colspan="6" class="text-center">No se encontraron registros</td>
+		    </tr> 
+		{% endif %}
+    </tbody>
+</table>
+<br><br>
+{% endblock %}
+{% load staticfiles %}
+{% block extrajs %}
+<script src="{% static 'js/functions-materiales.js' %}"></script>
+{% endblock %}

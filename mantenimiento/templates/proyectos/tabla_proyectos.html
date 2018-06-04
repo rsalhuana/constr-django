@@ -1,0 +1,51 @@
+{% if proyectos %}
+	{%for proyecto in proyectos%}
+		<tr id="tr_{{forloop.counter}}" class="tr_proyectos">
+			<td>{{proyecto.id_cliente.vc_codTipoDocumento.vc_codigo}}</td>
+		    <td>{{proyecto.id_cliente.vc_numDocumento}}</td>
+		    <td>{{proyecto.id_cliente.vc_razonSocial}}</td>
+		    <td>{{proyecto.vc_nombreProyecto}}</td>
+		    <td>{{proyecto.dt_fecAprobacion|date:"d-m-Y"}}</td>
+		    <td>{{proyecto.dt_fecInicio|date:"d-m-Y"}}</td>
+		    <td>{{proyecto.dt_fecCierre|date:"d-m-Y"}}</td>
+		    <td>{{proyecto.vc_codEstado.vc_valor1}}</td>
+		    <td>
+		    	 <div class='row margin-button' id="{{proyecto.vc_codEstado.id_generalDetalle}}" >
+		    	 	{% if proyecto.vc_codEstado.id_generalDetalle ==  16  or proyecto.vc_codEstado.id_generalDetalle ==  17 or proyecto.vc_codEstado.id_generalDetalle ==  18 %}
+	                <div class='cursor'>
+	                    <a href="{% url 'editar_proyecto' proyecto.id_proyecto 1 %}" class="link-button"><i class='fa fa-pencil-square-o'></i></a>
+	                </div>
+	            	{% endif %}
+	            	 {% if proyecto.vc_codEstado.id_generalDetalle ==  19 %}
+                        <div class='cursor'>
+                            <a href="#" class="link-button"  onclick="mensajeTerminado()"><i class='fa fa-pencil-square-o'></i></a>
+                        </div>
+                    {% endif %}
+	            	{% if proyecto.vc_codEstado.id_generalDetalle ==  20 %}
+	                <div class='cursor margin-button' onclick='setProyecto({{proyecto.id_proyecto}} , {{proyecto.vc_codEstado.id_generalDetalle}})'>
+	                    <i class='fa fa-check'></i>
+	                </div>
+	            	{% else %}
+		            	{% if proyecto.vc_codEstado.id_generalDetalle ==  16 %}
+		            	 <div class='cursor margin-button' onclick='setProyecto({{proyecto.id_proyecto}} , {{proyecto.vc_codEstado.id_generalDetalle}})'>
+		                    <i class='fa fa-times'></i>
+		                </div>
+		            	{% else %}
+		            	<div class='cursor margin-button'>
+                            <a href="#" class="link-button"  onclick="mensajeEdoRegistrado()"><i class='fa fa-times'></i></a>
+                        </div>
+	                	{% endif %}
+	            	{% endif %}
+	                <div class='cursor margin-button'>
+	                    <a href="{% url 'editar_proyecto' proyecto.id_proyecto 0 %}" class="link-button"><i class='fa fa-eye'></i></a>
+	                </div>
+	            </div>
+		    </td>
+	    	<input type="hidden" id="estadoIngreso_{{forloop.counter}}" value={{proyecto.vc_codEstado.id_generalDetalle}}>
+		</tr>	
+	{% endfor %} 
+	{% else %}
+    <tr>
+        <td colspan="9" class="text-center" id="no_registro">No se encontraron registros</td>
+    </tr> 
+{% endif %}

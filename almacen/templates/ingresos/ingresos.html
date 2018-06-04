@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+{% block title %}Sistema de Gestión Administrativa{% endblock %}
+{% block content %}
+<div class="container" style="max-width:100%;">
+	<br>
+	<div class="row">
+		<div class="col-sm-8 text-left">Almacen 
+			<i class="fa fa-chevron-right"></i> Ingresos
+		</div>
+		<div class="col-sm-1 offset-2 text-center">
+			<div class="col" onclick="modalExportar()">
+				<a href="#" class="link-button">
+					<i class="fa fa-file-excel-o" style="margin-left:32px;"></i>
+					<div class="col">Exportar</div>
+				</a>
+			</div>
+		</div>
+		<div class="col-sm-1 text-center">
+			<div class="col">			
+				<a href="{% url 'nuevo' %}" class="link-button">
+					<i class="fa fa-file-o" style="margin-left:17px;"></i>
+					<div class="col">Nuevo</div>
+				</a>
+			</div>
+		</div>
+	</div>
+	<br>
+	<div class="row">
+		<div class="col-xs-4 text-left" style="margin-left:17px;">Buscar por:</div>
+		<div class="col-sm-9 text-left">
+            <input class="form-control" type="text" placeholder="" id="buscar" name="buscar">
+        </div>
+		<div class="col-sm-1 text-right" onclick="buscar(1)" style="margin-left:10px;">
+			<button type="submit" class="btn btn-default">Buscar</button>
+		</div>
+		<div class="col-sm-1 text-right" onclick="buscar(2)">
+			<button type="submit" class="btn btn-default">Limpiar</button>
+		</div>
+	</div>
+	<br>
+</div>
+<table class="table table-striped" id="data_comprobantes">
+    <thead>
+    	<tr>
+	        <th>Proyecto</th>
+	        <th>Fecha Emisión</th>
+	        <th>Tipo Comprobante</th>
+	        <th>Num. Serie</th>
+	        <th>Num. Comprobante</th>
+	        <th>Condiciones</th>
+	        <th>RUC</th>
+	        <th>Razon Social</th>
+	        <th>Imp. Total</th>
+	        <th>Estado Registro</th>
+	        <th>Opciones</th>
+      	</tr>
+    </thead>
+    <tbody  id="tabla_comprobante">
+    	{% include "ingresos/tabla_ingresos.html" %}
+    </tbody>
+</table>
+<br><br>
+<input type="hidden" id="idIngreso" name="idIngreso" value="">
+{% endblock %}

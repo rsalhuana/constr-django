@@ -1,0 +1,64 @@
+<table class="table table-striped" id="tabla_materiales">
+    <thead>
+      	<tr>
+	        <th>Código</th>
+	        <th style="width:40%;">Descripción</th>
+	        <th>Valor</th>
+	        <th>Und. Med</th>
+	        <th>Stock Actual</th>
+	        <th>Situación</th>
+	        <th>Estado</th>
+	        <th>Opciones</th>
+      	</tr>
+    </thead>
+    <tbody  id="data_materiales">
+		{% if materiales %}
+			{%for material in materiales %}
+				<tr id="tr_{{forloop.counter}}" class="tr_proyectos">
+					<td>{% if material.vc_codigo == None %}{% else %}{{material.vc_codigo}}{% endif %}</td>
+				    <td style="width:40%;">{{material.vc_descripcion}}</td>
+				    <td style="text-align: right;">{{material.nu_valor}}</td>
+				    <td>{{material.id_unidadMedida.vc_descripcionCorta}}</td>
+				    <td style="text-align: right;">{% if material.nu_stockActual == None %}{% else %}{{material.nu_stockActual}}{% endif %}</td>
+				    <td>{{material.id_codSituacion.vc_valor1}}</td>
+				    <td>{{material.id_codEstado.vc_valor1}}</td>
+				    <td>
+				    	 <div class='row margin-button' id="{{material.id_materiales}}" >
+				    	 	{% if perms.mantenimiento.change_materiales or edit == 1 %}
+				    	 	{% if material.id_codEstado.id_generalDetalle == 42 %}
+			                <div class='cursor'>
+			                    <a href="{% url 'editar_material' material.id_materiales 1 %}" class="link-button"><i class='fa fa-pencil-square-o'></i></a>
+			                </div>
+			                {% else %}
+			                <div class='cursor'>
+			                    <a class="link-button" onclick="modalStatusEdicion();"><i class='fa fa-pencil-square-o'></i></a>
+			                </div>
+			                {% endif %}
+			                {% endif %}
+			                {% if perms.mantenimiento.delete_materiales or delete == 1 %}
+			                {% if material.id_codEstado.id_generalDetalle == 42 %}
+				            	<div class='cursor margin-button' onclick="modalStatusMaterial({{material.id_materiales}} , {{material.id_codEstado.id_generalDetalle }});">
+				                 	<i class='fa fa-times'></i>
+				            	</div>
+				            {% else %}
+				            	<div class='cursor margin-button' onclick="modalStatusMaterial({{material.id_materiales}} , {{material.id_codEstado.id_generalDetalle }});" >
+				                 	<i class='fa fa-check'></i>
+				            	</div>
+				            {% endif %}
+				            {% endif %}
+				            {% if perms.mantenimiento.ver_material or ver == 1 %}
+			                <div class='cursor margin-button'>
+			                    <a href="{% url 'editar_material' material.id_materiales 0 %}" class="link-button"><i class='fa fa-eye'></i></a>
+			                </div>
+			                {% endif %}
+			            </div>
+				    </td>
+				</tr>
+			{% endfor %}
+			{% else %}
+		    <tr>
+		        <td colspan="8" class="text-center">Para esta búsqueda no existen Datos</td>
+		    </tr> 
+		{% endif %}
+	</tbody>
+</table>

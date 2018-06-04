@@ -1,0 +1,36 @@
+<table class="table table-striped" id="tabla_materiales">
+    <thead>
+        <tr>
+          <th>Código</th>
+          <th>Familia</th>
+          <th>Clasificación</th>
+          <th style="width:35%;">Descripción</th>
+          <th>Color</th>
+          <th>Valor</th>
+          <th>Uni. Medida</th>
+          <th>Situación</th>
+          <th>Estado</th>
+        </tr>
+    </thead>
+    <tbody  id="data_materiales">
+    {% if materiales %}
+      {%for material in materiales %}
+        <tr id="tr_{{forloop.counter}}" class="tr_proyectos">
+            <td>{% if material.vc_codigo == None %}{% else %}{{material.vc_codigo}}{% endif %}</td>
+            <td>{{material.id_codFamilia.vc_valor1}}</td>
+            <td>{{material.id_codClasificacion.vc_valor1}}</td>
+            <td style="width:35%;">{{material.vc_descripcion}}</td>
+            <td>{{material.id_codColor.vc_valor1}}</td>
+             <td style="text-align: right;">{{material.nu_valor}}</td>
+            <td>{{material.id_unidadMedida.vc_descripcionCorta}}</td>
+            <td>{{material.id_codSituacion.vc_valor1}}</td>
+            <td>{{material.id_codEstado.vc_valor1}}</td>
+        </tr>
+      {% endfor %}
+      {% else %}
+        <tr>
+            <td colspan="9" class="text-center">Para esta búsqueda no existen Datos</td>
+        </tr> 
+    {% endif %}
+  </tbody>
+</table>

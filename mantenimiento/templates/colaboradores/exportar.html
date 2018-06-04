@@ -1,0 +1,35 @@
+<table class="table table-striped">
+    <thead>
+          <tr>
+            <th>RUC</th>
+	        <th>Razón Social</th>
+            <th>Distrito</th>
+            <th>Dirección</th>
+            <th>Contacto</th>
+            <th>Telf. Contacto</th>
+            <th>Telf. Empresa</th>
+	        <th>Estado</th>
+	        <th>Opciones</th>
+          </tr>
+    </thead>
+    <tbody  id="tabla_colaboradores">
+        {% if colaboradores %}
+            {%for colaborador in colaboradores%}
+                <tr>
+                    <td>{{colaborador.vc_ruccolaborador}}</td>
+                    <td>{{colaborador.vc_razonsocial}}</td>
+                    <td>{{colaborador.id_ubigeo.vc_descripcion}}</td>
+                    <td>{{colaborador.vc_direccion}}</td>
+                    <td>{{colaborador.vc_contacto}}</td>
+                    <td>{{colaborador.vc_telfcontacto}}</td>
+                    <td>{{colaborador.vc_telfempresa}}</td>
+                    <td>{{colaborador.vc_codestado.vc_valor1}}</td>
+                </tr>	
+            {% endfor %} 
+            {% else %}
+            <tr>
+                <td colspan="8" class="text-center">No se encontraron registros</td>
+            </tr> 
+        {% endif %}
+    </tbody>
+</table>

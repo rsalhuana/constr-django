@@ -1,0 +1,89 @@
+{% extends "base.html" %}
+
+{% block bodyclass %}login{% endblock %}
+
+
+
+{% block breadcrumbs %}{% endblock %}
+
+{% block extrahead %}
+{% include 'accounts-extrahead.html' %}
+{% endblock %}
+
+{% block header %}
+{% include 'accounts-header.html' %}
+{% endblock %}
+
+{% block title %}Iniciar Sesión{% endblock %}
+
+
+{% block content %}
+{% if form.errors and not form.non_field_errors %}
+<div class="alert alert-info text-center col-12">
+    Complete los errores
+</div>
+{% endif %}
+{% if user.is_authenticated %}
+<div class="alert alert-info text-center col-12">
+    Estás autenticado como <strong>{{ user.get_username }}</strong>, pero no estás autorizado para acceder a esta página. ¿Te gustaría ingresar a una cuenta diferente?
+    <a href="{% url 'home' %}">Ir al inicio </a>
+</div>
+{% endif %} 
+<div class="container d-flex security">
+    <div class="container-fluid align-self-center">
+
+
+        {% if form.non_field_errors %}
+        {% for error in form.non_field_errors %}
+        <div class="alert alert-danger text-center alert-dismissible fade show col-6 offset-3" role="alert">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            {{ error }}
+        </div>
+        {% endfor %}
+        {% endif %}
+        <form role="form" method="POST" class="text-right">
+            {% csrf_token %}
+
+            <div class="form-group row">
+                <label for="username" class="col-2 offset-3 col-form-label">
+                    <strong>Usuario</strong>
+                </label>
+                <div class="col-4">
+                    <input class="form-control" type="text" id="username" name="username" placeholder="Nombre de Usuario">
+                </div>
+                <div class="offset-3 col-6 form-control-feedback">
+                    <span class="text-danger">
+                        {{ form.username.errors }}
+                    </span>
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <label for="password" class="col-2 offset-3 col-form-label">
+                    <strong>Contraseña</strong>
+                </label>
+                <div class="col-4">
+                    <input class="form-control" type="password" id="password" name="password" placeholder="Contraseña de Acceso">
+                </div>
+                <div class="offset-3 col-6 form-control-feedback">
+                    <span class="text-danger">
+                        {{ form.password.errors }}
+                    </span>
+                </div>
+            </div>
+            <div class="row text-center">
+                <div class="col-12"> 
+                    <a class="btn btn-link" href="{% url 'password_reset' %}">
+                        <strong>¿Olvidó su contraseña?</strong>
+                    </a>
+                </div>
+                <div class="col-12">
+                    <button type="submit" class="btn btn-success"><i class="fa fa-sign-in"></i> Iniciar Sesión</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

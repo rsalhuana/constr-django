@@ -1,0 +1,34 @@
+ <table class="table table-striped">
+    <thead>
+      <tr>
+        <th>Proyecto</th>
+        <th>Fecha Emisión</th>
+        <th>Tipo Comprobante</th>
+        <th>Num. Serie</th>
+        <th>Num. Comprobante</th>
+        <th>Condiciones</th>
+        <th>RUC</th>
+        <th>Razon Social</th>
+        <th>Imp. Total</th>
+        <th>Estado Registro</th>
+      </tr>
+    </thead>
+    <tbody>    
+    {% if ingresoCabecera %}
+    {% for ingreso in ingresoCabecera%}
+      <tr>
+        <td>{{ingreso.id_proyecto.vc_nombreProyecto}}</td>
+        <td>{{ingreso.dt_emision}}</td>
+        <td>{{ingreso.vc_codTipoComprobante.vc_valor1}}</td>
+        <td>{{ingreso.vc_serieComprobante}}</td>
+        <td>{{ingreso.vc_numComprobante}}</td>
+        <td>{{ingreso.dt_emision}}</td>
+        <td>{{ingreso.id_proveedor.vc_rucproveedor}}</td>
+        <td>{{ingreso.id_proveedor.vc_razonsocial}}</td>
+        <td>{{ingreso.fl_importe}}</td>
+        <td>{{ingreso.vc_codEstado.vc_valor1}}</td>
+      </tr>
+    {% endfor %}       
+     {% endif %}
+   </tbody>
+  </table>

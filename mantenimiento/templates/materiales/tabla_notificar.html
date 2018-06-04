@@ -1,0 +1,42 @@
+<table name="tabla_notificar" width="100%" style="border: 1px solid #000;border-collapse: collapse;">
+    <thead>
+      	<tr style="border: 1px solid #000;background-color: #dddddd">
+	        <th width="5" heigth="5" style="border: 1px solid #000;padding: 6px;padding: 8px; text-align:center;">Código</th>
+	        <th style="width:47%;border: 1px solid #000;padding: 6px;text-align:center;text-align:center;">Descripción</th>
+	        <th  width="5" heigth="5" style="border: 1px solid #000;padding: 6px;text-align:center;">Und. Med</th>
+	        <th  width="5" heigth="5" style="border: 1px solid #000;padding: 6px;text-align:center;">Valor</th>
+	        <th  width="5" heigth="5" style="border: 1px solid #000;padding: 6px;text-align:center;">Situación</th>
+	        <th  width="5" heigth="5" style="border: 1px solid #000;padding: 6px;text-align:center;">Estado</th>
+      	</tr>
+    </thead>
+    <tbody  id="tabla_notificar" style="text-align: left;">
+    	{% if materiales %}
+			{%for material in materiales %}
+				<tr id="tr_{{forloop.counter}}" class="tr_proyectos">
+					<td  width="5" heigth="5" style="border: 1px solid #000;text-align:center;">
+						{% if material.vc_codigo == None %}{% else %}{{material.vc_codigo}}{% endif %}
+					</td>
+				    <td style="width:47%;border: 1px solid #000;text-align:center;">
+				    	{{material.vc_descripcion}}
+				    </td>
+				    <td  width="5" heigth="5" style="border: 1px solid #000;text-align:center;">
+				    	{{material.id_unidadMedida.vc_descripcionCorta}}
+				    </td>
+				    <td  width="5" heigth="5" style="border: 1px solid #000;text-align:center;">
+				    	{{material.nu_valor}}
+				    </td>
+				    <td  width="5" heigth="5" style="border: 1px solid #000;text-align:center;">
+				    	{{material.id_codSituacion.vc_valor1}}
+				    </td>
+				    <td  width="5" heigth="5" style="border: 1px solid #000;text-align:center;">
+				    	{{material.id_codEstado.vc_valor1}}
+				    </td>
+				</tr>
+			{% endfor %}
+			{% else %}
+		    <tr>
+		        <td colspan="7" class="text-center">Para esta búsqueda no existen Datos</td>
+		    </tr> 
+		{% endif %}
+    </tbody>
+</table>

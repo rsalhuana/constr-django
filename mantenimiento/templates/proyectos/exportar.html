@@ -1,0 +1,34 @@
+<table class="table table-striped">
+    <thead>
+      	<tr>
+	        <th>Tipo Doc</th>
+	        <th>Num. Doc</th>
+	        <th>Razon Social</th>
+	        <th>Nombre del Proyecto</th>
+	        <th>Fec. Aprobación</th>
+	        <th>Fec. Inicio</th>
+	        <th>Fec. Cierre</th>
+	        <th>Estado</th>
+      	</tr>
+    </thead>
+    <tbody  id="tabla_proyectos">
+		{% if proyectos %}
+			{%for proyecto in proyectos%}
+				<tr>
+					<td>{{proyecto.id_cliente.vc_codTipoDocumento.vc_codigo}}</td>
+				    <td>{{proyecto.id_cliente.vc_numDocumento}}</td>
+				    <td>{{proyecto.id_cliente.vc_razonSocial}}</td>
+				    <td>{{proyecto.vc_nombreProyecto}}</td>
+				    <td>{{proyecto.dt_fecAprobacion|date:"d-m-Y"}}</td>
+				    <td>{{proyecto.dt_fecInicio|date:"d-m-Y"}}</td>
+				    <td>{{proyecto.dt_fecCierre|date:"d-m-Y"}}</td>
+				    <td>{{proyecto.vc_codEstado.vc_valor1}}</td>
+				</tr>	
+			{% endfor %} 
+			{% else %}
+		    <tr>
+		        <td colspan="8" class="text-center">No se encontraron registros</td>
+		    </tr> 
+		{% endif %}
+	</tbody>
+</table>

@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+{% block title %}Sistema de Gestión Administrativa{% endblock %}
+{% block content %}
+<div class="container" style="max-width:100%;">
+	<br>
+	<div class="row">
+		<div class="col-sm-6 text-left">Mantenimiento <i class="fa fa-chevron-right"></i> Materiales/Herramientas</div>
+		<div class="col-sm-1 offset-2 text-center">
+			{% if perms.mantenimiento.aprobar_material %}
+			<div class="col" onclick="">
+				<a href="{% url 'view_aprobar' %}" class="link-button">
+					<i class="fa fa-check" style="margin-left:32px;"></i>
+					<div class="col">Aprobar</div>
+				</a>
+			</div>
+			{% endif %}
+		</div>
+		<div class="col-sm-1 text-center">
+			{% if perms.mantenimiento.notificar_material %}
+			<div class="col" onclick="">
+				<a href="{% url 'view_notificar' %}" class="link-button">
+					<i class="fa fa-envelope-o" style="margin-left:32px;"></i>
+					<div class="col">Notificar</div>
+				</a>
+			</div>
+			{% endif %}
+		</div>
+		<div class="col-sm-1 text-center">
+			{% if perms.mantenimiento.exportar_material %}
+			<div class="col" onclick="modalExportMaterial();">
+				<a href="#" class="link-button">
+					<i class="fa fa-file-excel-o" style="margin-left:32px;"></i>
+					<div class="col">Exportar</div>
+				</a>
+			</div>
+			{% endif %}
+		</div>
+		<div class="col-sm-1 text-center">
+			{% if perms.mantenimiento.add_materiales %}
+			<div class="col">			
+				<a href="{% url 'index' %}" class="link-button">
+					<i class="fa fa-file-o" style="margin-left:17px;"></i>
+					<div class="col text-center">Nuevo</div>
+				</a>
+			</div>
+			{% endif %}
+		</div>
+	</div>
+	<br>
+	<div class="row">
+		<div class="col-xs-4 text-left" style="margin-left:17px;">Buscar por:</div>
+		<div class="col-sm-9 text-rigth" >
+            <input class="form-control" type="text" placeholder="" id="busqueda" name="busqueda">
+        </div>
+		<div class="col-sm-1 text-right"  style="margin-left:10px;">
+			<button type="submit" class="btn btn-default" onclick="buscarMateriales(0)">Buscar</button>
+		</div>
+		<div class="col-sm-1 text-right">
+			<button type="submit" class="btn btn-default" onclick="buscarMateriales(1)">Limpiar</button>
+		</div>
+	</div>
+	<br>
+</div>
+{% if perms.mantenimiento.change_materiales %}
+<input id="permiso_edit" type="hidden" value="1">
+{% endif %}
+{% if perms.mantenimiento.delete_materiales %}
+<input id="permiso_delete" type="hidden" value="1">
+{% endif %}
+{% if perms.mantenimiento.ver_materiales %}
+<input id="permiso_ver" type="hidden" value="1">
+{% endif %}
+{% include "materiales/tabla_materiales.html" %} 
+<br><br>
+<input type="hidden" id="id_estado_material">
+   <input type="hidden" id="idModal" value="{{idModal}}">
+{% endblock %}
+{% load staticfiles %}
+{% block extrajs %}
+<script src="{% static 'js/functions-materiales.js' %}"></script>
+{% endblock %}

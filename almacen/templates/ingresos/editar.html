@@ -1,0 +1,397 @@
+{% extends "base.html" %}
+{% block title %}Sistema de Gestión Administrativa{% endblock %}
+{% block content %}
+<div class="container" style="max-width:100%;">
+  <br>
+  <form action="/editarIngreso" method="POST" id="form_edit_ingreso">{% csrf_token %}
+	  <div class="row">
+		  <div class="col-sm-6 text-left">Almacen 
+        <i class="fa fa-chevron-right"></i> Ingresos 
+        <i class="fa fa-chevron-right"></i> Editar
+      </div>
+      <div class="col object-tool">
+        <div class="row offset-1">
+          <div class="col-sm-2 offset-5 text-right" id="boton_confor">
+            <div class="col">
+              <a class="link-button btn" href='{% url 'conformidad' ingresoCabecera.id_ingresoCabecera %}'>
+                <i class="fa fa-angellist"></i>
+                <div class="col"> Conformidad</div>
+              </a>
+            </div>
+          </div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+          <div class="col-sm-2 text-right hide" id="boton_editar">
+            <div class="col">
+              <a class="link-button btn link-submit" href='#' data-form='form_edit_ingreso' data-formmain="editaringresos">
+                <i class="fa fa-save"></i>
+                <div class="col"> Grabar</div>
+              </a>
+            </div>
+          </div>
+          <div class="col-sm-2 text-right">
+            <div class="col">
+              <a class="link-button btn" href='{% url 'ingresos' %}'>
+                <i class="fa fa-reply"></i>
+                <div class="col"> Regresar</div>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+	  </div>
+	  <br>
+  	<ul class="nav nav-tabs">
+      <li class="nav-item">
+        <a class="nav-link active color-letter" data-toggle="tab" href="#generales">Generales</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link color-letter" data-toggle="tab" href="#comprobante" onclick="calculoTotal();">Comprobante</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link color-letter" data-toggle="tab" href="#detalle">Detalle</a>
+      </li>
+    </ul>
+    <!-- Tab panes -->
+    <div class="tab-content">
+      <br>
+      <!-- #################GENERAL################################ -->
+      <div class="tab-pane active container" id="generales" style="max-width:100%;">
+        <div class="form-group" onclick="selectOrden()">
+          <div class="row">
+            <div class="col-sm-2"></div>
+            <div class="col-sm-2">
+              <label class="radio-inline">
+                <input type="radio" name="optradio" {% if not ingresoCabecera.vc_ocRayro %}checked="checked"{% endif %} id="s_orden"  name="s_orden"> Sin Orden Compra
+              </label>
+            </div>
+            <div class="col-sm-2">
+              <label class="radio-inline">
+                <input type="radio" name="optradio" id="c_orden" name="c_orden" {% if ingresoCabecera.vc_ocRayro %}checked="checked"{% endif %}> Con Orden Compra
+              </label>
+            </div>
+          </div>
+        </div>
+        <div class="form-group">
+          <div class="row">
+            <div class="col-sm-2 text-left">Num. Ord. Compra</div>
+            <div class="col-sm-2 text-left">
+              <input class="form-control" type="text" value="{{ingresoCabecera.vc_ocRayro}}" id="num_orden" name="num_orden" readonly maxlength="10">
+            </div>
+          </div>
+        </div>
+        <div class="form-group">
+          <div class="row">
+            <div class="col-sm-2 text-left">Recepción</div>
+            <div class="col-sm-3 text-left">
+              <select class="form-control"  name="recepcion">
+                {% for recep in recepcion %}
+                  <option value="{{ recep.id_generalDetalle}}"  {% if ingresoCabecera.vc_codRepcion.id_generalDetalle ==  recep.id_generalDetalle  %}selected="selected"{% endif %}>{{ recep.vc_valor1 }}</option>
+                {% endfor %}                        
+              </select>
+            </div>
+          </div>
+        </div>
+        <div class="form-group">
+          <div class="row">
+            <div class="col-sm-2 text-left">Proyecto</div>
+            <div class="col-sm-6 text-left">
+              <select class="form-control"  name="proyecto">
+                {% for proyecto in proyectos %}
+                  <option value="{{ proyecto.id_proyecto}}" {% if ingresoCabecera.id_proyecto.id_proyecto ==  proyecto.id_proyecto  %}selected="selected"{% endif %}>{{ proyecto.vc_nombreProyecto }}</option>
+                {% endfor %}
+              </select>
+            </div>
+          </div>
+        </div>
+        <div class="form-group">
+          <div class="row">
+            <div class="col-sm-2 text-left">Estado</div>
+            <div class="col-sm-3 text-left">
+              <select class="form-control" name="estado">
+                {% for edo in estado %}
+                  <option value="{{ edo.id_generalDetalle}}" {% if ingresoCabecera.vc_codEstado ==  edo.id_generalDetalle  %}selected="selected"{% endif %}>{{ edo.vc_valor1 }}</option>
+                {% endfor %}
+              </select>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- #################COMPROBANTE################################ -->
+      <div class="tab-pane container" id="comprobante" style="max-width:100%;">
+        <div class="form-group">
+          <div class="row" class="datepicker" data-date-format="mm/dd/yyyy">
+            <div class="col-sm-2 text-left">Fecha Emisión</div>
+            <div class="col-sm-2 text-left">
+              <div class="input-group">
+                <input class="form-control py-2 border-right-0 border block-datep" data-date-format="mm/dd/yyyy" type="text" value="{{ ingresoCabecera.dt_emision|date:"d/m/Y" }}" id="fecha_emision"  name="fecha_emision" readonly>
+                <span class="input-group-append">
+                  <div class="input-group-text d-flex align-items-center h100">
+                    <i class="fa fa-calendar"></i>
+                  </div>
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="form-group editaringresos">
+          <div class="row">
+            <div class="col-sm-2 text-left"><label for="ruc">RUC Proveedor</label></div>
+            <div class="col-sm-2 text-left">
+                <input class="form-control remove-selected" type="tetx" value="{{ingresoCabecera.id_proveedor.vc_rucproveedor}}" id="ruc"  name="ruc" required>
+                <div class="invalid__ruc text-invalid"></div>
+            </div>
+            <div class="col-sm-2 text-left" onclick="buscarRuc();">
+               <i class="fa fa-search"></i>
+            </div>
+          </div>
+        </div>
+        <div class="form-group">
+          <div class="row">
+            <div class="col-sm-2 text-left">Raz. Soc. Proveedor</div>
+            <div class="col-sm-5 text-left">
+              <input class="form-control" type="text" value="{{ingresoCabecera.id_proveedor.vc_razonsocial}}" readonly id="razon_social"  name="razon_social">
+            </div>
+          </div>
+        </div>
+        <div class="form-group">
+          <div class="row">
+            <div class="col-sm-2 text-left">Tipo Comprobante</div>
+            <div class="col-sm-3 text-left">
+              <select class="form-control"  name="tipo_comprobante" >
+                {% for tipoc in tipocomprobante %}
+                  <option value="{{ tipoc.id_generalDetalle}}" {% if ingresoCabecera.vc_codTipoComprobante.id_generalDetalle ==  tipoc.id_generalDetalle  %}selected="selected"{% endif %}>{{ tipoc.vc_valor1 }}</option>
+                {% endfor %}    
+              </select>
+            </div>
+          </div>
+        </div>
+        <div class="form-group editaringresos">
+          <div class="row">
+            <div class="col-sm-2 text-left"><label for="serie">Serie Comprobante</label></div>
+            <div class="col-sm-2 text-left">
+              <input class="form-control remove-selected" type="text" value="{{ ingresoCabecera.vc_serieComprobante }}"  name="serie"  id="serie" required maxlength="3">
+              <div class="invalid__serie text-invalid"></div>
+            </div>
+          </div>
+        </div>
+        <div class="form-group editaringresos">
+          <div class="row">
+            <div class="col-sm-2 text-left"><label for="num_comprobante">Num. Comprobante</label></div>
+            <div class="col-sm-2 text-left">
+              <input class="form-control remove-selected" type="text" value="{{ ingresoCabecera.vc_numComprobante }}"  name="num_comprobante" id="num_comprobante" required maxlength="5">
+              <div class="invalid__num_comprobante text-invalid"></div>
+            </div>
+          </div>
+        </div>
+        <div class="form-group">
+          <div class="row">
+            <div class="col-sm-2 text-left">Condición Comp.</div>
+            <div class="col-sm-3 text-left">
+              <select class="form-control" name="condicion">
+                {% for condicion in condicionpago %}
+                  <option value="{{ condicion.id_generalDetalle}}" {% if ingresoCabecera.vc_codCondicionPago.id_generalDetalle ==  condicion.id_generalDetalle  %} selected="selected"{% endif %}>{{ condicion.vc_valor1 }}</option>
+                {% endfor %}   
+              </select>
+            </div>
+          </div>
+        </div>
+        <div class="form-group">
+          <div class="row">
+            <div class="col-sm-2 text-left">Importe</div>
+            <div class="col-sm-2 text-left">
+              <input class="form-control text-right" type="text" value="{{ ingresoCabecera.fl_importe }}" readonly id="importe_comprobante" name="importe_comprobante">
+            </div>
+          </div>
+        </div>
+        <div class="form-group">
+          <div class="row">
+            <div class="col-sm-2 text-left">IGV</div>
+            <div class="col-sm-2 text-left">
+              <input class="form-control text-right" type="text" value="{{ ingresoCabecera.fl_igv }}" readonly id="igv_comprobante" name="igv_comprobante">
+            </div>
+          </div>
+        </div>
+        <div class="form-group">
+          <div class="row">
+            <div class="col-sm-2 text-left">Total</div>
+            <div class="col-sm-2 text-left">
+              <input class="form-control text-right" type="text" value="{{ ingresoCabecera.fl_total }}" readonly id="total_comprobante" name="total_comprobante">
+            </div>
+          </div>
+        </div>
+        <br><br>
+      </div>
+      <!-- #################DETALLE################################ -->
+      <div class="tab-pane container" id="detalle" style="max-width:100%;">
+        <div class="form-group">
+          <div class="row">
+            <div class="col-sm-2 text-left"><label for="direccion_gasto">Dirección del Gasto</label></div>
+            <div class="col-sm-3 text-left">
+              <select class="form-control remove-selected" id="direccion_gasto" name="direccion_gasto" required>
+                <option selected value="">Seleccionar</option>
+                {% for gasto in direcciongasto %}
+                  <option value="{{ gasto.id_generalDetalle}}">{{ gasto.vc_valor1 }}</option>
+                {% endfor %}   
+              </select>
+               <div class="invalid__direccion_gasto text-invalid"></div>
+            </div>
+          </div>
+        </div>
+        <div class="form-group">
+            <div class="row">
+                <div class="col-sm-2 text-left"><label for="descripcion_detalle">Descripción</label></div>
+                 <div class="col-sm-6 text-left">
+                  <input class="form-control autocomplete remove-selected" type="text" placeholder="" id="descripcion_detalle" name="descripcion_detalle" required>
+                  <div class="invalid__descripcion_detalle text-invalid"></div>
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+          <div class="row">
+            <div class="col-sm-2 text-left">Código</div>
+            <div class="col-sm-2 text-left">
+                <input class="form-control" type="search" value="" id="codigo_material" name="codigo_material">
+            </div>
+            <div class="col-sm-2 text-left cursor" onclick="buscarDescMaterial();">
+              <i class="fa fa-search"></i>
+            </div>
+          </div>
+        </div>
+        <div class="form-group">
+          <div class="row">
+            <div class="col-sm-2 text-left">Valor</div>
+            <div class="col-sm-1 text-left">
+              <input class="form-control" type="text" placeholder="" readonly id="valor_medida" name="valor_medida">
+            </div>
+          </div>
+        </div>
+        <div class="form-group">
+          <div class="row">
+            <div class="col-sm-2 text-left">Unidad de Medida</div>
+            <div class="col-sm-2 text-left">
+              <input class="form-control" type="text" placeholder="" readonly id="unidad_medida" name="unidad_medida">
+            </div>
+          </div>
+        </div>
+        <div class="form-group">
+          <div class="row">
+            <div class="col-sm-2 text-left"><label for="cantidad_detalle">Cantidad</label></div>
+            <div class="col-sm-2 text-left">
+              <input class="form-control text-right remove-selected" type="text" placeholder=""  id="cantidad_detalle" name="cantidad_detalle" required onkeydown="comm_replace(this);decimal(6,2,'cantidad_detalle');" maxlength="9">
+              <div class="invalid__cantidad_detalle text-invalid"></div>
+            </div>
+          </div>
+        </div>
+        <div class="form-group">
+          <div class="row">
+            <div class="col-sm-2 text-left">Total Ingreso</div>
+            <div class="col-sm-2 text-left">
+              <input class="form-control text-right" type="text" placeholder="" readonly id="total_detalle"  name="total_detalle">
+            </div>
+          </div>
+        </div>
+        <div class="form-group">
+          <div class="row">
+            <div class="col-sm-2 text-left">Precio Unitario</div>
+            <div class="col-sm-2 text-left">
+              <input class="form-control text-right" type="text" placeholder="" readonly id="precio_detalle" name="precio_detalle">
+            </div>
+          </div>
+        </div>
+        <div class="form-group">
+          <div class="row">
+            <div class="col-sm-2 text-left">Sub Total</div>
+            <div class="col-sm-2 text-left">
+              <input class="form-control text-right" type="text" placeholder="" readonly id="subtotal_detalle" name="subtotal_detalle">
+            </div>
+          </div>
+        </div>
+        <div class="form-group">
+          <div class="row">
+            <div class="col-sm-2 text-left">IGV</div>
+            <div class="col-sm-2 text-left">
+              <input class="form-control text-right" type="text" placeholder="" readonly id="igv_detalle" name="igv_detalle">
+            </div>
+          </div>
+        </div>
+        <div class="form-group">
+          <div class="row">
+            <div class="col-sm-2 text-left"><label for="importe_detalle">Importe</label></div>
+            <div class="col-sm-2 text-left">
+              <input class="form-control text-right remove-selected" type="text" placeholder="" id="importe_detalle"  name="importe_detalle" required onkeydown="comm_replace(this);decimal(6,2,'importe_detalle');" maxlength="9">
+              <div class="invalid__importe_detalle text-invalid"></div>
+            </div>
+            <div class="col-sm-2 text-left cursor" onclick="agregarDetalle();" id="botonAgregar">
+              <i class="fa fa-plus"></i>
+            </div>
+            <div class="col-sm-2 text-left cursor hide" onclick="guardarEdicion();" id="botonGuardar">
+              <i class="fa fa-check"></i>
+            </div>
+          </div>
+        </div>
+        <input type="hidden" name="id_materiales" id="id_materiales" value=''> 
+        <table class="table table-bordered">
+          <thead>
+            <tr>
+              <th scope="col">Dirección Gasto</th>
+              <th scope="col">Código</th>
+              <th scope="col">Descripción</th>
+              <th scope="col">Uni. Med</th>
+              <th scope="col">Conf. O.C.</th>
+              <th scope="col">Cantidad</th>
+              <th scope="col">Total</th>
+              <th scope="col">Precio Unit.</th>
+              <th scope="col">IGV</th>
+              <th scope="col">Importe</th>
+              <th scope="col">Conf. Adm.</th>
+              <th scope="col" id="opcion_detalle-0">Opciones</th>
+            </tr>
+          </thead>
+            <tbody id="tabla_detalle">                
+              {% for detalle in detalles %}
+                <tr id="{{forloop.counter}}">
+                  <td id="direccion_gasto-{{ forloop.counter }}">{{detalle.vc_codDireccionGasto.vc_valor1}}</td>
+                  <td id="codigo_material-{{ forloop.counter }}">{% if detalle.id_materiales.vc_codigo == None%}{% else %}{{detalle.id_materiales.vc_codigo}}{% endif %}</td>
+                  <td id="descripcion_detalle-{{ forloop.counter }}">{{detalle.id_materiales.vc_descripcion}}</td>
+                  <td id="unidad_medida-{{ forloop.counter }}">{{detalle.id_materiales.id_unidadMedida.vc_descripcionCorta}}</td>
+                  <td id="check1_detalle-{{ forloop.counter }}"><input class='text-center' type='checkbox' id='inlineCheckbox1' value='option1' disabled></td>
+                  <td id="cantidad_detalle-{{ forloop.counter }}">{{detalle.nu_cantidad}}</td>
+                  <td id="total_detalle-{{ forloop.counter }}">{{detalle.nu_totalIngreso}}</td>
+                  <td id="precio_detalle-{{ forloop.counter }}">{{detalle.nu_precioUnitario}}</td>
+                  <td id="igv_detalle-{{ forloop.counter }}">{{detalle.nu_igv}}</td>
+                  <td id="importe_detalle-{{ forloop.counter }}">{{detalle.nu_Importe}}</td>
+                  <td id="check2_detalle-{{ forloop.counter }}"><input class='text-center' type='checkbox' id='inlineCheckbox1' value='option1' disabled></td>
+                  <td id="opcion_detalle-{{ forloop.counter }}">
+                    <div class='row margin-button'>
+                      <div class='cursor' onclick='editarDetalle({{forloop.counter}})'>
+                        <i class='fa fa-pencil-square-o'></i>
+                      </div>
+                      <div class='cursor margin-button' onclick='eliminarDetalle({{forloop.counter}} , {{detalle.id_ingresoDetalle}})'>
+                        <i class='fa fa-times'></i>
+                      </div>
+                    </div>
+                  </td>
+                  <td id="subtotal_detalle-{{ forloop.counter }}" class="hide">{{detalle.nu_subTotal}}</td>
+                  <td id="valor_medida-{{ forloop.counter }}" class="hide">{{detalle.id_materiales.id_unidadMedida.nu_valor}}</td>
+                  <td id="id_detalle-{{ forloop.counter }}" class="hide">{{detalle.id_ingresoDetalle}}</td>
+                  <td id="direccion_gasto_edit-{{ forloop.counter }}" class="hide">{{detalle.vc_codDireccionGasto.id_generalDetalle}}</td>
+                  <td id="id_materiales-{{ forloop.counter }}" class="hide">{{detalle.id_materiales.id_materiales}}</td>
+                </tr>
+              {% endfor %}            
+            </tbody>
+             <input type="hidden" id="contador_detalle" value="{{detalles|length}}">  
+          </table>
+          <br><br>
+        </div>
+        <input type="hidden" id="idEditar">
+        <input type="hidden" id="idVista" value="{{idVista}}">
+        <input type="hidden" id="idModal" value="{{idModal}}">
+        <input type="hidden" name="idActDetalle"  id="idActDetalle" value="[]">
+        <input type="hidden" id="idEditarIngreso" name="idEditarIngreso" value="{{ingresoCabecera.id_ingresoCabecera}}">
+        <div  id="array_detalle"></div>
+        <input type="hidden" name="array" id="array" value='[]'> 
+        <input type="hidden" name="id_proveedor" id="id_proveedor" value='{{ingresoCabecera.id_proveedor.id_proveedor}}'> 
+      </div>
+    </form>
+	  <br>
+  </div>
+{% endblock %}

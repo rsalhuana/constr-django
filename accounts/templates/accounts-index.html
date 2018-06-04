@@ -1,0 +1,32 @@
+{% extends "admin/index.html" %}
+{% load i18n static %}
+
+
+{% block content %}
+{% if app_list %}
+{% for app in app_list %}
+<div class="card app-{{ app.app_label }}">
+    <div class="card-body">
+        <h4 class="card-title">
+            {{ app.name }}
+        </h4>
+        <ul class="list-group list-group-flush">
+            {% for model in app.models %}
+            <li class="list-group-item model-{{ model.object_name|lower }}">
+                {% if model.admin_url %}
+                <a href="{{ model.admin_url }}">{{ model.name }}</a>
+                {% else %}
+                <strong>{{ model.name }}</strong>
+                {% endif %}
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+</div>
+{% endfor %}
+{% else %}
+<div class="alert alert-info" role="alert">
+    {% trans "You don't have permission to edit anything." %}
+</div>
+{% endif %}
+{% endblock %}

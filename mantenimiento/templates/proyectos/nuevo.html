@@ -1,0 +1,182 @@
+{% extends "base.html" %}
+{% block title %}Sistema de Gestión Administrativa{% endblock %}
+
+{% block content %}
+<div class="container" style="max-width:100%;">
+  <br>
+  <form action="/guardar/proyecto" method="POST" id="form-save-proyecto">{% csrf_token %}
+    <div class="row">
+      <div class="col-sm-8 text-left">Mantenimiento <i class="fa fa-chevron-right"></i> Proyectos <i class="fa fa-chevron-right"></i> Nuevo</div>
+      <div class="col object-tool">
+        <div class="row offset-1">
+          <div class="col-sm-2 offset-5 text-right">
+            <div class="col">
+              <a class="link-button btn link-submit" href='#' data-form='form-save-proyecto' data-formmain="proyectos">
+                <i class="fa fa-save"></i>
+                <div class="col"> Grabar</div>
+              </a>
+          </div>
+            </div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+          <div class="col-sm-2 text-right">
+            <div class="col">
+              <a class="link-button btn" href='{% url 'proyectos' %}'>
+                <i class="fa fa-reply"></i>
+                <div class="col"> Regresar</div>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="form-group">
+        <div class="row">
+            <div class="col-sm-2 text-left">Estado</div>
+            <div class="col-sm-3 text-left">
+              <input class="form-control" type="hidden" value="16" name="id_estado" >
+              <input class="form-control" type="text" value="Registrado" id="name_estado" readonly>
+            </div>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="row">
+            <div class="col-sm-2 text-left">Tipo Documento</div>
+            <div class="col-sm-3 text-left">
+                <select class="form-control"  name="tipo_documento" id="tipo_documento">
+                  <option selected value=""></option>
+                  {% for documento in documentos %}
+                    <option value="{{ documento.id_generalDetalle}}">{{ documento.vc_valor1 }}</option>
+                  {% endfor %}                        
+                </select>
+            </div>
+        </div>
+    </div>
+    <div class="form-group proyectos">
+        <div class="row">
+            <div class="col-sm-2 text-left"><label for="numero_documento">Número Documento</label></div>
+            <div class="col-sm-3 text-left">
+                <input class="form-control remove-selected" type="search" value="" id="numero_documento" name="numero_documento" required>
+                <div class="invalid__numero_documento text-invalid"></div>
+            </div>
+            <div class="col-sm-2 text-left cursor" onclick="buscarDocumento()">
+              <i class="fa fa-search"></i>
+            </div>
+        </div>
+    </div>
+            <div class="form-group">
+                <div class="row">
+                    <div class="col-sm-2 text-left">Cliente</div>
+                    <div class="col-sm-6 text-left">
+                      <input class="form-control" type="text" value="" id="razon_social" disabled>
+                       <input class="form-control" type="hidden" value="" id="id_cliente" name="id_cliente">
+                    </div>
+                </div>
+            </div>
+            <div class="form-group proyectos">
+                <div class="row">
+                    <div class="col-sm-2 text-left"><label for="nombre_proyecto">Nom. Proyecto</label></div>
+                    <div class="col-sm-6 text-left">
+                      <input class="form-control remove-selected" type="text" value="" id="nombre_proyecto" name="nombre_proyecto" required>
+                      <div class="invalid__nombre_proyecto text-invalid"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="row">
+                    <div class="col-sm-2 text-left">Distrito Proyecto</div>
+                    <div class="col-sm-3 text-left">
+                        <select class="form-control"  name="id_ubigeo" id="id_ubigeo">
+                          <option selected  value="">Seleccionar</option>
+                          {% for ubig in ubigeo %}
+                            {% if ubig.vc_descripcion|length > 4%}
+                              <option value="{{ ubig.id_ubigeo}}">{{ ubig.vc_descripcion }}</option>
+                            {% endif %}
+                          {% endfor %}                        
+                        </select>
+                    </div>
+                </div>
+            </div>
+             <div class="form-group">
+                <div class="row">
+                    <div class="col-sm-2 text-left">Dirección del Proyecto</div>
+                    <div class="col-sm-6 text-left">
+                      <input class="form-control" type="text" value="" name="direccion" id="direccion" maxlength="120">
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+              <div class="row" class="datepicker" data-date-format="mm/dd/yyyy">
+                  <div class="col-sm-2 text-left">Fecha Aprobación</div>
+                  <div class="col-sm-2">
+                      <div class="input-group">
+                          <input class="form-control py-2 border-right-0 border datep block-datep" data-date-format="mm/dd/yyyy" type="text" value="{{proyecto.dt_fecAprobacion|date:"d/m/Y"}}" id="fecha_aprobacion"  name="fecha_aprobacion" readonly>  
+                          <span class="input-group-append">
+                              <div class="input-group-text d-flex align-items-center h100"><i class="fa fa-calendar"></i></div>
+                          </span>
+                      </div>
+                  </div>
+              </div>
+            </div>
+             <div class="form-group">
+                  <div class="row" class="datepicker" data-date-format="mm/dd/yyyy">
+                      <div class="col-sm-2 text-left">Fecha Inicio</div>
+                      <div class="col-sm-2 text-left">
+                          <div class="input-group">
+                              <input class="form-control py-2 border-right-0 border datep block-datep" data-date-format="mm/dd/yyyy" type="text" value="" id="fecha_inicio"  name="fecha_inicio" readonly>
+                              <span class="input-group-append">
+                                  <div class="input-group-text d-flex align-items-center h100"><i class="fa fa-calendar"></i></div>
+                              </span>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+               <div class="form-group">
+                  <div class="row" class="datepicker" data-date-format="mm/dd/yyyy">
+                      <div class="col-sm-2 text-left">Fecha Cierre</div>
+                      <div class="col-sm-2 text-left">
+                          <div class="input-group">
+                              <input class="form-control py-2 border-right-0 border datep block-datep" data-date-format="mm/dd/yyyy" type="text" value="" id="fecha_cierre"  name="fecha_cierre" readonly>
+                              <span class="input-group-append">
+                                  <div class="input-group-text d-flex align-items-center h100"><i class="fa fa-calendar"></i></div>
+                              </span>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+            <div class="form-group">
+                <div class="row">
+                    <div class="col-sm-2 text-left">Supervisor de Obra</div>
+                    <div class="col-sm-6 text-left">
+                        <select class="form-control"  name="id_colaborador" id="id_colaborador">
+                          <option selected value="">Seleccionar</option>
+                          {% for col in colaborador %}
+                            <option value="{{ col.id_colaborador.id_colaborador}}">{{col.id_colaborador.vc_nomColaborador}}  {{col.id_colaborador.vc_apePatColaborador}}</option>
+                          {% endfor %}
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="row">
+                    <div class="col-sm-2 text-left">Contacto</div>
+                    <div class="col-sm-6 text-left">
+                      <input class="form-control" type="text" value="" name="contacto" id="contacto" maxlength="120">
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="row">
+                    <div class="col-sm-2 text-left">Tel. Contacto</div>
+                    <div class="col-sm-2 text-left">
+                      <input class="form-control" type="text" value="" name="tlf" id="tlf" maxlength="10">
+                    </div>
+                </div>
+            </div>
+
+   </form>
+  <br><br>
+</div>
+{% endblock %}
+{% load staticfiles %}
+{% block extrajs %}
+<script src="{% static 'js/functions-mant.js' %}"></script>
+{% endblock %}
